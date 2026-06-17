@@ -295,7 +295,10 @@ const Page = styled.div`
 `;
 
 const Hero = styled.section`
-	width: min(calc(100% - (${theme.layout.contentGutter} * 2)), ${theme.layout.contentMaxWidth});
+	width: min(
+		calc(100% - (${theme.layout.contentGutter} * 2)),
+		${theme.layout.contentMaxWidth}
+	);
 	margin: 0 auto;
 	padding: clamp(1.8rem, 3.6vw, 3rem) 0 0.85rem;
 `;
@@ -339,7 +342,7 @@ const HeroControls = styled.div`
 
 const SearchInput = styled.input`
 	width: min(100%, 18rem);
-	flex: 0 1 18rem;
+
 	min-height: 2.45rem;
 	border: 0.0625rem solid rgb(211 202 196 / 0.82);
 	border-radius: 0.9rem;
@@ -352,6 +355,10 @@ const SearchInput = styled.input`
 	&:focus {
 		border-color: ${theme.colors.orangeLight};
 		outline: none;
+	}
+	@media (max-width: 52rem) {
+		min-height: 1.45rem;
+		width: 100%;
 	}
 `;
 

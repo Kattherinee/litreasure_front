@@ -1,5 +1,6 @@
 "use client";
 
+import AddIcon from "@mui/icons-material/Add";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import styled from "styled-components";
 
@@ -63,7 +64,8 @@ export const MyCollectionsTab = ({
 				</ViewAllLink>
 			</Row>
 			<HeaderActionButton type="button" onClick={onCreateCollection}>
-				Create
+				<AddIcon aria-hidden="true" />
+				<span>Create</span>
 			</HeaderActionButton>
 		</Header>
 		<FilterRow>

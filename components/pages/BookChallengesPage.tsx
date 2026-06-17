@@ -512,17 +512,15 @@ const BookChallengesPage = () => {
 		<Page>
 			<Content>
 				<Hero>
-					<HeroTop>
-						<BackLink href="/treasures">My treasures</BackLink>
-						<NewButton type="button" onClick={openCreateModal}>
-							New challenge
-						</NewButton>
-					</HeroTop>
+					<HeroTop></HeroTop>
 					<Title>Book challenges</Title>
 					<Lead>
 						Track goals for books and pages: reading progress and time are shown
 						together so you can see not only what is left, but also your pace.
 					</Lead>
+					<NewButton type="button" onClick={openCreateModal}>
+						New challenge
+					</NewButton>
 				</Hero>
 
 				{isLoading ? (
@@ -1188,6 +1186,7 @@ const Hero = styled.header`
 
 	@media (max-width: 42rem) {
 		padding-right: 0;
+		padding-top: 2rem;
 	}
 `;
 
@@ -1295,7 +1294,7 @@ const ChallengeSlide = styled.div<{ $hasPreview: boolean; $isActive: boolean }>`
 		transform 180ms ease;
 
 	@media (max-width: 48rem) {
-		flex-basis: 100%;
+		flex-basis: 90%;
 		padding-inline: 0;
 		opacity: 1;
 		transform: none;
@@ -1471,8 +1470,8 @@ const SpotlightCard = styled.article`
 
 const EditSpotlightButton = styled.button`
 	position: absolute;
-	top: 0;
-	right: 0;
+	top: 1rem;
+	right: 1rem;
 	border: 0;
 	background: transparent;
 	padding: 0.25rem;
@@ -1488,6 +1487,9 @@ const EditSpotlightButton = styled.button`
 		text-decoration: underline;
 		text-underline-offset: 0.16rem;
 		outline: none;
+	}
+	@media screen {
+		font-size: 1.08rem;
 	}
 `;
 

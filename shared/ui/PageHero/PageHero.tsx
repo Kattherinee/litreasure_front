@@ -39,6 +39,9 @@ const Hero = styled.section`
 	width: 100vw;
 	margin-left: calc(50% - 50vw);
 	background: url("/images/TitleBlock.svg") center / cover no-repeat;
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		padding-top: 2rem;
+	}
 `;
 
 const HeroInner = styled.div<{ $copyWidth?: string }>`

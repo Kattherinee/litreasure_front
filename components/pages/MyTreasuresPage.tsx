@@ -500,5 +500,7 @@ const Content = styled.div`
 
 	@media (max-width: ${theme.rubberSize.tablet}) {
 		width: 95vw;
+
+		padding-top: 2rem;
 	}
 `;

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import SearchPage from "@/components/pages/SearchPage";
+import SearchPageClient from "./SearchPageClient";
 
 export const metadata = {
 	title: "Search - Litreasure",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function SearchRoute() {
 	return (
 		<Suspense>
-			<SearchPage />
+			<SearchPageClient />
 		</Suspense>
 	);
 }

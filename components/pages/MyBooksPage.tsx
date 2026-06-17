@@ -221,6 +221,9 @@ const Page = styled.div`
 const Content = styled.div`
 	width: 60vw;
 	margin: 0 auto;
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		width: 95vw;
+	}
 `;
 
 const StatusTabs = styled(ChipTabs)``;

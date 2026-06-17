@@ -1,5 +1,5 @@
-import GenresPage from "@/components/pages/GenresPage";
+import GenresPageClient from "./GenresPageClient";
 
 export default function GenresRoute() {
-	return <GenresPage />;
+	return <GenresPageClient />;
 }
