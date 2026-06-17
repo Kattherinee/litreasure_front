@@ -631,6 +631,9 @@ const GenresBlock = styled.div`
 	align-items: center;
 	gap: 0.43vw 0.35vw;
 	font-family: ${theme.fonts.sans};
+	@media (max-width: 47.9375rem) {
+		gap: 0.95rem 0.75rem;
+	}
 `;
 
 export const HighlightedGenrePill = styled(GenrePill)`

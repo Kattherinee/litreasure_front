@@ -179,7 +179,7 @@ const BookDetailsContent = ({ book }: { book: IBook }) => {
 					{isRelatedBooksLoading ? (
 						<SkeletonCarousel aria-label="Loading recommendations">
 							{Array.from({ length: 8 }, (_, index) => (
-								<BookCardSkeleton key={index} />
+								<BookCardSkeleton key={`skeleton-${index}`} />
 							))}
 						</SkeletonCarousel>
 					) : isRelatedBooksError ? (
@@ -191,18 +191,22 @@ const BookDetailsContent = ({ book }: { book: IBook }) => {
 							books={carouselBooks}
 							size="compact"
 							onControlsChange={(controls) => {
-								setCarouselControls((currentControls) => {
-									if (
-										currentControls?.canScrollNext === controls.canScrollNext &&
-										currentControls?.canScrollPrev === controls.canScrollPrev &&
-										currentControls?.scrollNext === controls.scrollNext &&
-										currentControls?.scrollPrev === controls.scrollPrev
-									) {
-										return currentControls;
-									}
+								setCarouselControls(
+									(currentControls: ICarouselControls | null) => {
+										if (
+											currentControls?.canScrollNext ===
+												controls.canScrollNext &&
+											currentControls?.canScrollPrev ===
+												controls.canScrollPrev &&
+											currentControls?.scrollNext === controls.scrollNext &&
+											currentControls?.scrollPrev === controls.scrollPrev
+										) {
+											return currentControls;
+										}
 
-									return controls;
-								});
+										return controls;
+									},
+								);
 							}}
 						/>
 					) : (
@@ -222,6 +226,9 @@ const Page = styled.div`
 	min-height: 100dvh;
 	overflow-x: hidden;
 	padding-bottom: 7rem;
+	@media (max-width: 47.9375rem) {
+		padding-bottom: 2rem;
+	}
 `;
 
 const StateMessage = styled.p`
@@ -259,10 +266,14 @@ const SectionTitle = styled.h2`
 	font-size: 2rem;
 	font-weight: 600;
 	line-height: 1.1;
+	@media (max-width: 47.9375rem) {
+		font-size: 1.2rem;
+	}
 `;
 
 const Controls = styled.div<{ $isVisible: boolean }>`
-	display: ${({ $isVisible }) => ($isVisible ? "flex" : "none")};
+	display: ${({ $isVisible }: { $isVisible: boolean }) =>
+		$isVisible ? "flex" : "none"};
 	flex: 0 0 auto;
 	gap: 0.625rem;
 `;

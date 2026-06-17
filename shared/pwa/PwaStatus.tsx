@@ -14,18 +14,19 @@ interface IBeforeInstallPromptEvent extends Event {
 }
 
 type SyncState = "idle" | "syncing" | "synced";
+
 const INSTALL_HINT_DISMISSED_KEY = "litreasure-pwa-install-dismissed";
+const CONNECTIVITY_CHECK_TIMEOUT_MS = 4000;
 
 const PwaStatus = () => {
 	const queryClient = useQueryClient();
-	const [isOnline, setIsOnline] = useState(
-		() => typeof navigator === "undefined" || navigator.onLine,
-	);
+	const [isOnline, setIsOnline] = useState(true);
 	const [isInstallHintDismissed, setIsInstallHintDismissed] = useState(
 		() =>
 			typeof window !== "undefined" &&
 			window.localStorage.getItem(INSTALL_HINT_DISMISSED_KEY) === "true",
 	);
+	const [isOfflineHintDismissed, setIsOfflineHintDismissed] = useState(false);
 	const [installPrompt, setInstallPrompt] =
 		useState<IBeforeInstallPromptEvent | null>(null);
 	const [syncState, setSyncState] = useState<SyncState>("idle");
@@ -41,7 +42,7 @@ const PwaStatus = () => {
 			}
 		};
 
-		registerServiceWorker();
+		void registerServiceWorker();
 	}, []);
 
 	useEffect(() => {
@@ -61,10 +62,49 @@ const PwaStatus = () => {
 	}, []);
 
 	useEffect(() => {
+		const verifyConnectivity = async () => {
+			if (typeof window === "undefined") return true;
+			if (navigator.onLine) return true;
+
+			const controller = new AbortController();
+			const timeoutId = window.setTimeout(
+				() => controller.abort(),
+				CONNECTIVITY_CHECK_TIMEOUT_MS,
+			);
+
+			try {
+				const response = await fetch(
+					`/manifest.webmanifest?network-check=${Date.now()}`,
+					{
+						cache: "no-store",
+						signal: controller.signal,
+					},
+				);
+
+				return response.ok;
+			} catch {
+				return false;
+			} finally {
+				window.clearTimeout(timeoutId);
+			}
+		};
+
+		const updateConnectivityStatus = async () => {
+			const nextIsOnline = await verifyConnectivity();
+			setIsOnline(nextIsOnline);
+
+			if (nextIsOnline) {
+				setIsOfflineHintDismissed(false);
+			}
+
+			return nextIsOnline;
+		};
+
 		let syncTimeout: ReturnType<typeof setTimeout> | undefined;
 
 		const syncOfflineChanges = async () => {
-			if (!navigator.onLine) return;
+			const nextIsOnline = await updateConnectivityStatus();
+			if (!nextIsOnline) return;
 
 			setSyncState("syncing");
 			const syncedCount = await syncQueuedUserBookMutations({
@@ -83,21 +123,30 @@ const PwaStatus = () => {
 		};
 
 		const handleOnline = () => {
-			setIsOnline(true);
-			syncOfflineChanges();
+			setIsOfflineHintDismissed(false);
+			void syncOfflineChanges();
 		};
-		const handleOffline = () => {
-			setIsOnline(false);
-			setSyncState("idle");
+		const handleOffline = async () => {
+			const nextIsOnline = await updateConnectivityStatus();
+			if (!nextIsOnline) {
+				setSyncState("idle");
+			}
+		};
+		const handleVisibilityChange = () => {
+			if (document.visibilityState === "visible") {
+				void updateConnectivityStatus();
+			}
 		};
 
 		window.addEventListener("online", handleOnline);
 		window.addEventListener("offline", handleOffline);
-		syncOfflineChanges();
+		document.addEventListener("visibilitychange", handleVisibilityChange);
+		void syncOfflineChanges();
 
 		return () => {
 			window.removeEventListener("online", handleOnline);
 			window.removeEventListener("offline", handleOffline);
+			document.removeEventListener("visibilitychange", handleVisibilityChange);
 			if (syncTimeout) clearTimeout(syncTimeout);
 		};
 	}, [queryClient]);
@@ -119,11 +168,18 @@ const PwaStatus = () => {
 		setInstallPrompt(null);
 	};
 
+	const dismissOfflineHint = () => {
+		setIsOfflineHintDismissed(true);
+	};
+
 	const showInstallHint = Boolean(
 		installPrompt && isOnline && !isInstallHintDismissed,
 	);
+	const showOfflineHint = !isOnline && !isOfflineHintDismissed;
 
-	if (!showInstallHint && isOnline && syncState === "idle") return null;
+	if (!showInstallHint && !showOfflineHint && isOnline && syncState === "idle") {
+		return null;
+	}
 
 	return (
 		<StatusCard role="status" aria-live="polite">
@@ -142,11 +198,13 @@ const PwaStatus = () => {
 					Install
 				</InstallButton>
 			) : null}
-			{showInstallHint ? (
+			{showInstallHint || showOfflineHint ? (
 				<CloseButton
-					aria-label="Close PWA install hint"
+					aria-label={
+						showInstallHint ? "Close PWA install hint" : "Close offline status"
+					}
 					type="button"
-					onClick={dismissInstallHint}
+					onClick={showInstallHint ? dismissInstallHint : dismissOfflineHint}
 				>
 					×
 				</CloseButton>

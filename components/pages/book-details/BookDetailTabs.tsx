@@ -476,7 +476,7 @@ const TabsBlock = styled.section`
 	overflow: hidden;
 
 	@media (max-width: 47.9375rem) {
-		margin-top: 0.8rem;
+		margin-top: 1rem;
 	}
 `;
 
@@ -488,6 +488,7 @@ const Tabs = styled.div`
 	@media (max-width: 56rem) {
 		flex-wrap: wrap;
 		gap: 1.75rem;
+		align-items: center;
 	}
 `;
 

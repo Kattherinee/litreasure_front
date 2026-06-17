@@ -57,6 +57,12 @@ const GlobalStyle = createGlobalStyle`
 		text-rendering: optimizeLegibility;
 	}
 
+	@media (display-mode: standalone) {
+		body {
+			padding-top: max(0.75rem, env(safe-area-inset-top));
+		}
+	}
+
 	@media (hover: none), (pointer: coarse) {
 		button:hover,
 		a:hover,
