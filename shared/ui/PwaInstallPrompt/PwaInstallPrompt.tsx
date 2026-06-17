@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { theme } from "@/shared/theme";
@@ -25,6 +25,16 @@ const isIosDevice = () => {
 	);
 };
 
+const isSafariBrowser = () => {
+	if (typeof window === "undefined") {
+		return false;
+	}
+
+	const userAgent = window.navigator.userAgent;
+
+	return /Safari/i.test(userAgent) && !/CriOS|FxiOS|EdgiOS|OPiOS/i.test(userAgent);
+};
+
 const isStandaloneMode = () => {
 	if (typeof window === "undefined") {
 		return false;
@@ -39,37 +49,6 @@ const isStandaloneMode = () => {
 		)
 	);
 };
-
-const subscribeToInstallState = (onStoreChange: () => void) => {
-	if (typeof window === "undefined") {
-		return () => undefined;
-	}
-
-	const standaloneMediaQuery = window.matchMedia("(display-mode: standalone)");
-	const fullscreenMediaQuery = window.matchMedia("(display-mode: fullscreen)");
-	const minimalUiMediaQuery = window.matchMedia("(display-mode: minimal-ui)");
-
-	const handleChange = () => onStoreChange();
-
-	standaloneMediaQuery.addEventListener("change", handleChange);
-	fullscreenMediaQuery.addEventListener("change", handleChange);
-	minimalUiMediaQuery.addEventListener("change", handleChange);
-	window.addEventListener("appinstalled", handleChange);
-	window.addEventListener("pageshow", handleChange);
-	document.addEventListener("visibilitychange", handleChange);
-
-	return () => {
-		standaloneMediaQuery.removeEventListener("change", handleChange);
-		fullscreenMediaQuery.removeEventListener("change", handleChange);
-		minimalUiMediaQuery.removeEventListener("change", handleChange);
-		window.removeEventListener("appinstalled", handleChange);
-		window.removeEventListener("pageshow", handleChange);
-		document.removeEventListener("visibilitychange", handleChange);
-	};
-};
-
-const getInstalledSnapshot = () => isStandaloneMode();
-const getInstalledServerSnapshot = () => true;
 
 const isDismissed = () => {
 	if (typeof window === "undefined") {
@@ -91,48 +70,73 @@ const PwaInstallPrompt = () => {
 	const [deferredPrompt, setDeferredPrompt] =
 		useState<BeforeInstallPromptEvent | null>(null);
 	const [isIosDeviceState] = useState(() => isIosDevice());
+	const [isSafariBrowserState] = useState(() => isSafariBrowser());
 	const [isCollapsed, setIsCollapsed] = useState(() => isDismissed());
-	const isInstalled = useSyncExternalStore(
-		subscribeToInstallState,
-		getInstalledSnapshot,
-		getInstalledServerSnapshot,
-	);
+	const [isInstalled, setIsInstalled] = useState(true);
+	const [isResolved, setIsResolved] = useState(false);
 
 	useEffect(() => {
-		if (typeof window === "undefined" || isStandaloneMode()) {
+		if (typeof window === "undefined") {
 			return;
 		}
+
+		const syncInstalledState = () => {
+			setIsInstalled(isStandaloneMode());
+			setIsResolved(true);
+		};
+
+		const frameId = window.requestAnimationFrame(syncInstalledState);
+		const standaloneMediaQuery = window.matchMedia("(display-mode: standalone)");
+		const fullscreenMediaQuery = window.matchMedia("(display-mode: fullscreen)");
+		const minimalUiMediaQuery = window.matchMedia("(display-mode: minimal-ui)");
 
 		const handleBeforeInstallPrompt = (event: Event) => {
 			event.preventDefault();
 			setDeferredPrompt(event as BeforeInstallPromptEvent);
 		};
 
-		const handleAppInstalled = () => {
-			setDeferredPrompt(null);
+		const handleEnvironmentChange = () => {
+			syncInstalledState();
 		};
 
+		const handleAppInstalled = () => {
+			setDeferredPrompt(null);
+			syncInstalledState();
+		};
+
+		standaloneMediaQuery.addEventListener("change", handleEnvironmentChange);
+		fullscreenMediaQuery.addEventListener("change", handleEnvironmentChange);
+		minimalUiMediaQuery.addEventListener("change", handleEnvironmentChange);
 		window.addEventListener(
 			"beforeinstallprompt",
 			handleBeforeInstallPrompt as EventListener,
 		);
 		window.addEventListener("appinstalled", handleAppInstalled);
+		window.addEventListener("pageshow", handleEnvironmentChange);
+		document.addEventListener("visibilitychange", handleEnvironmentChange);
 
 		return () => {
+			window.cancelAnimationFrame(frameId);
+			standaloneMediaQuery.removeEventListener("change", handleEnvironmentChange);
+			fullscreenMediaQuery.removeEventListener("change", handleEnvironmentChange);
+			minimalUiMediaQuery.removeEventListener("change", handleEnvironmentChange);
 			window.removeEventListener(
 				"beforeinstallprompt",
 				handleBeforeInstallPrompt as EventListener,
 			);
 			window.removeEventListener("appinstalled", handleAppInstalled);
+			window.removeEventListener("pageshow", handleEnvironmentChange);
+			document.removeEventListener("visibilitychange", handleEnvironmentChange);
 		};
 	}, []);
 
-	if (isInstalled) {
+	if (!isResolved || isInstalled) {
 		return null;
 	}
 
 	const showAndroidPrompt = Boolean(deferredPrompt);
-	const showIosPrompt = isIosDeviceState && !showAndroidPrompt;
+	const showIosPrompt =
+		isIosDeviceState && isSafariBrowserState && !isInstalled && !showAndroidPrompt;
 	const canShowPrompt = showAndroidPrompt || showIosPrompt;
 
 	if (!canShowPrompt) {

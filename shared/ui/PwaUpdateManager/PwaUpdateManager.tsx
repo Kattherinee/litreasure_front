@@ -100,16 +100,15 @@ const PwaUpdateManager = () => {
 	const touchStartYRef = useRef<number | null>(null);
 	const isPullingRef = useRef(false);
 	const [isTouchDeviceState] = useState(() => isTouchDevice());
-	const [isStandalonePwa, setIsStandalonePwa] = useState(() => isStandaloneMode());
+	const [isStandalonePwa, setIsStandalonePwa] = useState(() =>
+		isStandaloneMode(),
+	);
 	const [pullDistance, setPullDistance] = useState(0);
 	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [updateReady, setUpdateReady] = useState(false);
 
 	useEffect(() => {
-		if (
-			typeof window === "undefined" ||
-			!("serviceWorker" in navigator)
-		) {
+		if (typeof window === "undefined" || !("serviceWorker" in navigator)) {
 			return;
 		}
 
@@ -138,10 +137,7 @@ const PwaUpdateManager = () => {
 		const handleVisibilityChange = () => {
 			const registration = registrationRef.current;
 
-			if (
-				document.visibilityState !== "visible" ||
-				!registration
-			) {
+			if (document.visibilityState !== "visible" || !registration) {
 				return;
 			}
 
@@ -167,7 +163,10 @@ const PwaUpdateManager = () => {
 					}
 
 					worker.addEventListener("statechange", () => {
-						if (worker.state === "installed" && navigator.serviceWorker.controller) {
+						if (
+							worker.state === "installed" &&
+							navigator.serviceWorker.controller
+						) {
 							syncUpdateState(registration);
 						}
 					});
@@ -299,7 +298,8 @@ const PwaUpdateManager = () => {
 	};
 
 	const pullProgress = Math.min(pullDistance / PULL_THRESHOLD, 1);
-	const showPullIndicator = isTouchDeviceState && (pullDistance > 0 || isRefreshing);
+	const showPullIndicator =
+		isTouchDeviceState && (pullDistance > 0 || isRefreshing);
 
 	return (
 		<>
@@ -344,7 +344,7 @@ const spin = keyframes`
 
 const PullIndicator = styled.div<{ $active: boolean }>`
 	position: fixed;
-	top: calc(0.75rem + env(safe-area-inset-top));
+	top: calc(1.25rem + env(safe-area-inset-top));
 	left: 50%;
 	z-index: 1450;
 	display: inline-flex;
@@ -354,7 +354,7 @@ const PullIndicator = styled.div<{ $active: boolean }>`
 		${({ $active }) =>
 			$active ? theme.colors.orangeLight : "rgb(238 179 141 / 0.36)"};
 	border-radius: 999px;
-	background: rgb(242 239 237 / 0.96);
+	background: rgb(242 239 237 / 0.76);
 	padding: 0.6rem 0.9rem;
 	color: ${theme.colors.bluePrimary};
 	box-shadow: 0 0.75rem 2rem rgb(4 18 26 / 0.16);
@@ -371,7 +371,8 @@ const Spinner = styled.span<{ $spinning: boolean }>`
 	border: 0.125rem solid rgb(35 61 77 / 0.22);
 	border-top-color: ${theme.colors.orangeDark};
 	border-radius: 50%;
-	animation: ${({ $spinning }) => ($spinning ? spin : "none")} 0.9s linear infinite;
+	animation: ${({ $spinning }) => ($spinning ? spin : "none")} 0.9s linear
+		infinite;
 `;
 
 const UpdateChip = styled.button`
