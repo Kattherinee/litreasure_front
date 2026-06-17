@@ -150,6 +150,10 @@ const Page = styled.div`
 const Content = styled.section`
 	width: 70vw;
 	margin: 0 auto;
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		width: 95vw;
+		padding-top: 2rem;
+	}
 `;
 
 const Title = styled.h1`

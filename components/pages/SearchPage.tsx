@@ -1208,6 +1208,9 @@ const ResultsNumber = styled.span`
 	font-size: 1.3vw;
 	font-weight: 600;
 	line-height: 1;
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		font-size: 3.5vw;
+	}
 `;
 
 const ResultsText = styled.span`
@@ -1215,6 +1218,9 @@ const ResultsText = styled.span`
 	font-size: 0.96vw;
 	line-height: 1;
 	font-weight: 500;
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		font-size: 2.5vw;
+	}
 `;
 
 const ResultsBadge = styled.div`

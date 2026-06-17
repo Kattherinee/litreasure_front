@@ -79,4 +79,8 @@ const BookCount = styled.span`
 	color: ${theme.colors.orangeDark};
 	font-size: 0.82vw;
 	line-height: 1.3vw;
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		font-size: 2.5vw;
+		line-height: 3.8vw;
+	}
 `;

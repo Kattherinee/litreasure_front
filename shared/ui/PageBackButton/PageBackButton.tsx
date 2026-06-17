@@ -40,7 +40,7 @@ export default PageBackButton;
 
 const BackButton = styled.button`
 	position: fixed;
-	top: 1rem;
+	top: 2rem;
 	left: calc(0.9rem + env(safe-area-inset-left));
 	z-index: 1400;
 	display: inline-flex;
