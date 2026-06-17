@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#151515"/><stop offset="1" stop-color="#6B1E2E"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <path d="M602 120c122 94 189 200 200 318-88-38-155-37-201 3-50-42-118-42-205 0 9-124 78-231 206-321z" fill="#fff" opacity=".2"/>
+  <circle cx="525" cy="300" r="28" fill="#fff" opacity=".68"/>
+  <circle cx="675" cy="300" r="28" fill="#fff" opacity=".68"/>
+  <path d="M520 402c55-30 108-30 160 0" stroke="#fff" stroke-width="22" stroke-linecap="round" opacity=".68"/>
+  <text x="86" y="590" fill="#fff" font-family="Arial, sans-serif" font-size="58" font-weight="700">Modern horror</text>
+</svg>

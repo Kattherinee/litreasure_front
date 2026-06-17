@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="1" y2="0"><stop stop-color="#17191F"/><stop offset="1" stop-color="#5B4A7A"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <path d="M245 482h650M318 482V230h505v252M385 482V298h80v184M552 482V298h80v184M720 482V298h80v184" stroke="#E8D7B7" stroke-width="28" stroke-linecap="round" fill="none" opacity=".76"/>
+  <path d="M285 220l285-120 285 120z" fill="#E8D7B7" opacity=".22"/>
+  <text x="86" y="590" fill="#fff" font-family="Arial, sans-serif" font-size="58" font-weight="700">Dark academia</text>
+</svg>

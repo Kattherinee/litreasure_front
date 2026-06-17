@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675">
+  <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#1E2A36"/><stop offset="1" stop-color="#8A6F4D"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <rect x="235" y="118" width="520" height="360" rx="18" fill="#F7EFE3" opacity=".22"/>
+  <path d="M315 205h360M315 275h295M315 345h330M315 415h240" stroke="#fff" stroke-width="24" stroke-linecap="round" opacity=".82"/>
+  <path d="M795 146h150v305H795z" fill="#fff" opacity=".16"/>
+  <text x="86" y="590" fill="#fff" font-family="Arial, sans-serif" font-size="58" font-weight="700">Modern essentials</text>
+</svg>

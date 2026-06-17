@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="1" y2="0"><stop stop-color="#112E40"/><stop offset="1" stop-color="#5CA4A9"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <circle cx="760" cy="205" r="74" fill="#fff" opacity=".8"/>
+  <path d="M330 474c52-150 143-245 273-286-43 93-33 190 31 293-93-43-194-45-304-7z" fill="#fff" opacity=".24"/>
+  <path d="M450 360l98-98 98 98-98 98z" fill="#fff" opacity=".72"/>
+  <text x="86" y="590" fill="#fff" font-family="Arial, sans-serif" font-size="58" font-weight="700">SFF gateways</text>
+</svg>

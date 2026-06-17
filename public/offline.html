@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#233d4d" />
+		<title>Litreasure is offline</title>
+		<style>
+			:root {
+				color-scheme: light;
+				font-family: Oxygen, "Segoe UI", sans-serif;
+			}
+
+			body {
+				display: grid;
+				min-height: 100dvh;
+				margin: 0;
+				place-items: center;
+				background:
+					radial-gradient(circle at 50% 20%, rgb(254 127 45 / 0.2), transparent 34rem),
+					linear-gradient(180deg, #efe8e3, #e8e2de);
+				color: #233d4d;
+			}
+
+			main {
+				width: min(32rem, calc(100% - 2rem));
+				text-align: center;
+			}
+
+			img {
+				width: min(15rem, 66vw);
+				filter: drop-shadow(0 1.25rem 2rem rgb(4 18 26 / 0.16));
+			}
+
+			h1 {
+				margin: 1rem 0 0;
+				color: #d4641c;
+				font-family: Georgia, serif;
+				font-size: clamp(2rem, 10vw, 3.5rem);
+			}
+
+			p {
+				margin: 0.75rem auto 0;
+				max-width: 26rem;
+				line-height: 1.55;
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<img src="/images/welcomePage/dracoWitch1.png" alt="" />
+			<h1>loading...</h1>
+			<p>
+				You are offline. Previously opened books and your saved library are
+				still available in Litreasure.
+			</p>
+		</main>
+	</body>
+</html>

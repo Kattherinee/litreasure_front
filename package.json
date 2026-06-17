@@ -1,0 +1,37 @@
+{
+	"name": "litreasure",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "eslint"
+	},
+	"dependencies": {
+		"@emotion/react": "^11.14.0",
+		"@emotion/styled": "^11.14.1",
+		"@fontsource/oxygen": "^5.2.8",
+		"@fontsource/vollkorn": "^5.2.10",
+		"@mui/icons-material": "^9.0.1",
+		"@mui/material": "^9.0.0",
+		"@tanstack/react-query": "^5.94.5",
+		"@visx/shape": "^4.0.0-alpha.11",
+		"embla-carousel-autoplay": "^8.6.0",
+		"embla-carousel-react": "^8.6.0",
+		"next": "16.2.1",
+		"react": "19.2.4",
+		"react-advanced-cropper": "^0.20.1",
+		"react-dom": "19.2.4",
+		"styled-components": "^6.4.1",
+		"zustand": "^5.0.12"
+	},
+	"devDependencies": {
+		"@types/node": "^20",
+		"@types/react": "^19",
+		"@types/react-dom": "^19",
+		"eslint": "^9",
+		"eslint-config-next": "16.2.1",
+		"typescript": "^5"
+	}
+}

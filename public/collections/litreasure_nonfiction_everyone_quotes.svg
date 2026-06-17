@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675">
+  <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#2D4A45"/><stop offset="1" stop-color="#D6A75A"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <path d="M335 178h470v330H335z" fill="#fff" opacity=".18"/>
+  <path d="M410 250h320M410 320h260M410 390h300" stroke="#fff" stroke-width="25" stroke-linecap="round" opacity=".78"/>
+  <circle cx="850" cy="185" r="72" fill="#fff" opacity=".34"/>
+  <text x="86" y="590" fill="#fff" font-family="Arial, sans-serif" font-size="58" font-weight="700">Nonfiction ideas</text>
+</svg>

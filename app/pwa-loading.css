@@ -1,0 +1,43 @@
+.pwa-loading-screen {
+	display: grid;
+	min-height: 100dvh;
+	place-items: center;
+	background:
+		radial-gradient(circle at 50% 20%, rgb(254 127 45 / 0.2), transparent 34rem),
+		linear-gradient(180deg, #efe8e3, #e8e2de);
+	color: #233d4d;
+}
+
+.pwa-loading-card {
+	display: grid;
+	justify-items: center;
+	gap: 1rem;
+	padding: 2rem;
+}
+
+.pwa-loading-draco {
+	width: min(16rem, 68vw);
+	height: auto;
+	filter: drop-shadow(0 1.25rem 2rem rgb(4 18 26 / 0.16));
+	animation: pwa-draco-float 1.8s ease-in-out infinite alternate;
+}
+
+.pwa-loading-title {
+	margin: 0;
+	color: #d4641c;
+	font-family: "Vollkorn", Georgia, serif;
+	font-size: clamp(1.8rem, 8vw, 3rem);
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	text-transform: lowercase;
+}
+
+@keyframes pwa-draco-float {
+	from {
+		transform: translateY(0);
+	}
+
+	to {
+		transform: translateY(-0.55rem);
+	}
+}
