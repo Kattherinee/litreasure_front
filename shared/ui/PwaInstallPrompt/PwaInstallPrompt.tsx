@@ -57,21 +57,16 @@ const setDismissed = () => {
 const PwaInstallPrompt = () => {
 	const [deferredPrompt, setDeferredPrompt] =
 		useState<BeforeInstallPromptEvent | null>(null);
-	const [isIosDeviceState, setIsIosDeviceState] = useState(false);
-	const [isInstalled, setIsInstalled] = useState(true);
-	const [isCollapsed, setIsCollapsed] = useState(false);
+	const [isIosDeviceState] = useState(() => isIosDevice());
+	const [isInstalled, setIsInstalled] = useState(() => isStandaloneMode());
+	const [isCollapsed, setIsCollapsed] = useState(() => isDismissed());
 
 	useEffect(() => {
 		if (typeof window === "undefined") {
 			return;
 		}
 
-		const standalone = isStandaloneMode();
-		setIsInstalled(standalone);
-		setIsIosDeviceState(isIosDevice());
-		setIsCollapsed(isDismissed());
-
-		if (standalone) {
+		if (isStandaloneMode()) {
 			return;
 		}
 
@@ -195,6 +190,8 @@ export default PwaInstallPrompt;
 
 const PromptWrap = styled.div`
 	position: fixed;
+	display: flex;
+	justify-content: flex-end;
 	right: calc(1rem + env(safe-area-inset-right));
 	bottom: calc(1rem + env(safe-area-inset-bottom));
 	z-index: 1350;

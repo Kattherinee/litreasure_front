@@ -356,6 +356,7 @@ const BookTitle = styled.h2`
 
 const BookDescription = styled.p`
 	margin: 0;
+	max-width: 34ch;
 	font-family: ${theme.fonts.serif};
 	font-size: 1rem;
 	font-weight: 400;
@@ -366,6 +367,7 @@ const BookDescription = styled.p`
 	-webkit-line-clamp: 4;
 
 	@media (max-width: ${theme.rubberSize.tablet}) {
+		max-width: 30ch;
 		font-size: 0.92rem;
 		-webkit-line-clamp: 3;
 	}
