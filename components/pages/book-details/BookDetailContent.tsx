@@ -468,6 +468,8 @@ const Backdrop = styled.div`
 	}
 
 	@media (max-width: 47.9375rem) {
+		top: -2rem;
+		height: calc(var(--detail-backdrop-height) + 2rem);
 		background-size: cover;
 	}
 `;
@@ -487,7 +489,7 @@ const ContentGrid = styled.div`
 
 	@media (max-width: 47.9375rem) {
 		display: block;
-		padding-top: 2rem;
+		padding-top: 4rem;
 	}
 `;
 

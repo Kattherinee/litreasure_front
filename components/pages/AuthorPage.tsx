@@ -525,7 +525,8 @@ const AuthorSeriesCard = ({
 		const updateLayout = () => {
 			const computedStyle = window.getComputedStyle(measureNode);
 			const gapValue = Number.parseFloat(computedStyle.gap || "0") || 0;
-			const itemWidth = measureNode.firstElementChild?.getBoundingClientRect().width;
+			const itemWidth =
+				measureNode.firstElementChild?.getBoundingClientRect().width;
 
 			if (!itemWidth || !measureNode.parentElement) {
 				setIsSlider(false);
@@ -601,9 +602,7 @@ const AuthorSeriesCard = ({
 							disabled={isSeriesSavePending}
 							title="Remove from saved"
 							type="button"
-							onClick={() =>
-								void onToggleSeriesSave(series.id, series.isSaved)
-							}
+							onClick={() => void onToggleSeriesSave(series.id, series.isSaved)}
 						>
 							<BookmarkIcon aria-hidden="true" />
 						</SavedActionButton>
@@ -611,9 +610,7 @@ const AuthorSeriesCard = ({
 						<SaveActionButton
 							disabled={isSeriesSavePending}
 							type="button"
-							onClick={() =>
-								void onToggleSeriesSave(series.id, series.isSaved)
-							}
+							onClick={() => void onToggleSeriesSave(series.id, series.isSaved)}
 						>
 							{isSeriesSavePending ? "Saving..." : "Subscribe"}
 						</SaveActionButton>
@@ -628,10 +625,7 @@ const AuthorSeriesCard = ({
 						))}
 					</SeriesBooksMeasure>
 					<SeriesBooksCarousel>
-						<SeriesBooksCarouselViewport
-							$hasOverflow
-							ref={setViewportRef}
-						>
+						<SeriesBooksCarouselViewport $hasOverflow ref={setViewportRef}>
 							<SeriesBooksCarouselContainer ref={setContainerRef}>
 								{series.books.map((book) => (
 									<CarouselSlide key={book.id}>
@@ -671,8 +665,10 @@ const Page = styled.div`
 const Content = styled.section`
 	width: 60vw;
 	margin: 0 auto;
+
 	@media (max-width: 48rem) {
 		width: 95vw;
+		padding: 2rem 2rem 0 0rem;
 	}
 `;
 

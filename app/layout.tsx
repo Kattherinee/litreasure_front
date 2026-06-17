@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
 import Providers from "@/app/providers";
+import StyledComponentsRegistry from "@/app/styled-components-registry";
 import { Header } from "@/shared/ui/Header";
 import PageBackButton from "@/shared/ui/PageBackButton/PageBackButton";
 
@@ -43,11 +44,13 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body>
-				<Providers>
-					<Header />
-					<PageBackButton />
-					<main>{children}</main>
-				</Providers>
+				<StyledComponentsRegistry>
+					<Providers>
+						<Header />
+						<PageBackButton />
+						<main>{children}</main>
+					</Providers>
+				</StyledComponentsRegistry>
 			</body>
 		</html>
 	);

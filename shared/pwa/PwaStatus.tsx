@@ -64,7 +64,6 @@ const PwaStatus = () => {
 	useEffect(() => {
 		const verifyConnectivity = async () => {
 			if (typeof window === "undefined") return true;
-			if (navigator.onLine) return true;
 
 			const controller = new AbortController();
 			const timeoutId = window.setTimeout(
@@ -73,17 +72,15 @@ const PwaStatus = () => {
 			);
 
 			try {
-				const response = await fetch(
-					`/manifest.webmanifest?network-check=${Date.now()}`,
-					{
-						cache: "no-store",
-						signal: controller.signal,
-					},
-				);
+				await fetch(`${API_BASE_URL}/books?limit=1&network-check=${Date.now()}`, {
+					cache: "no-store",
+					mode: "no-cors",
+					signal: controller.signal,
+				});
 
-				return response.ok;
+				return true;
 			} catch {
-				return false;
+				return navigator.onLine;
 			} finally {
 				window.clearTimeout(timeoutId);
 			}
@@ -206,7 +203,7 @@ const PwaStatus = () => {
 					type="button"
 					onClick={showInstallHint ? dismissInstallHint : dismissOfflineHint}
 				>
-					×
+					&times;
 				</CloseButton>
 			) : null}
 		</StatusCard>

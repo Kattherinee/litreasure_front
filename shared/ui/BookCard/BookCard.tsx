@@ -508,6 +508,7 @@ const BookCardWrapper = styled.article<{
 
 	@media (max-width: ${theme.rubberSize.tablet}) {
 		gap: 0.35rem;
+		height: unset;
 	}
 `;
 

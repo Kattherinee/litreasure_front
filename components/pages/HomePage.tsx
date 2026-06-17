@@ -294,6 +294,10 @@ const CatalogHero = styled.section`
 			${theme.colors.bluePrimary} 0%,
 			${theme.colors.foreground} 100%
 		);
+
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		padding-top: 2rem;
+	}
 `;
 
 const CatalogHeroInner = styled.div`
@@ -317,6 +321,7 @@ const CatalogHeroInner = styled.div`
 		gap: 1.05rem;
 		padding-bottom: 3.5rem;
 		padding: clamp(2.25rem, 4.5vw, 4rem) 0 clamp(2rem, 3.5vw, 2.5rem);
+		padding-top: 4rem;
 	}
 `;
 

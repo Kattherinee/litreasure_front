@@ -56,6 +56,7 @@ const Page = styled.div<{ $step: IWelcomeStep }>`
 		display: block;
 		height: auto;
 		overflow: visible;
+		padding: 2rem 0;
 	}
 `;
 

@@ -879,6 +879,7 @@ const PageWrap = styled.div`
 
 	@media (max-width: 720px) {
 		width: 95vw;
+		padding-top: 2rem;
 	}
 `;
 
@@ -997,7 +998,13 @@ const Tabs = styled.div`
 	gap: 0.5rem;
 	overflow-x: auto;
 	overflow-y: hidden;
-	padding-bottom: 0.25rem;
+	padding-bottom: 1rem;
+	scrollbar-width: thin;
+	scrollbar-gutter: stable;
+
+	&::-webkit-scrollbar {
+		height: 0.45rem;
+	}
 `;
 const TabsWrapper = styled.div`
 	display: flex;

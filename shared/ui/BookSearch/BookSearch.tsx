@@ -862,7 +862,13 @@ const Tabs = styled.div`
 	overflow-x: auto;
 	overflow-y: hidden;
 	background: ${theme.colors.background};
-	padding: 0 1.25rem 1rem;
+	padding: 0 1.25rem 1.8rem;
+	scrollbar-width: thin;
+	scrollbar-gutter: stable;
+
+	&::-webkit-scrollbar {
+		height: 0.45rem;
+	}
 
 	&::after {
 		position: absolute;
