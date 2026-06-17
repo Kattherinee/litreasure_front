@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import styled from "styled-components";
 
 import { theme } from "@/shared/theme";
@@ -32,11 +32,44 @@ const isStandaloneMode = () => {
 
 	return (
 		window.matchMedia("(display-mode: standalone)").matches ||
+		window.matchMedia("(display-mode: fullscreen)").matches ||
+		window.matchMedia("(display-mode: minimal-ui)").matches ||
 		Boolean(
 			(window.navigator as Navigator & { standalone?: boolean }).standalone,
 		)
 	);
 };
+
+const subscribeToInstallState = (onStoreChange: () => void) => {
+	if (typeof window === "undefined") {
+		return () => undefined;
+	}
+
+	const standaloneMediaQuery = window.matchMedia("(display-mode: standalone)");
+	const fullscreenMediaQuery = window.matchMedia("(display-mode: fullscreen)");
+	const minimalUiMediaQuery = window.matchMedia("(display-mode: minimal-ui)");
+
+	const handleChange = () => onStoreChange();
+
+	standaloneMediaQuery.addEventListener("change", handleChange);
+	fullscreenMediaQuery.addEventListener("change", handleChange);
+	minimalUiMediaQuery.addEventListener("change", handleChange);
+	window.addEventListener("appinstalled", handleChange);
+	window.addEventListener("pageshow", handleChange);
+	document.addEventListener("visibilitychange", handleChange);
+
+	return () => {
+		standaloneMediaQuery.removeEventListener("change", handleChange);
+		fullscreenMediaQuery.removeEventListener("change", handleChange);
+		minimalUiMediaQuery.removeEventListener("change", handleChange);
+		window.removeEventListener("appinstalled", handleChange);
+		window.removeEventListener("pageshow", handleChange);
+		document.removeEventListener("visibilitychange", handleChange);
+	};
+};
+
+const getInstalledSnapshot = () => isStandaloneMode();
+const getInstalledServerSnapshot = () => false;
 
 const isDismissed = () => {
 	if (typeof window === "undefined") {
@@ -58,15 +91,15 @@ const PwaInstallPrompt = () => {
 	const [deferredPrompt, setDeferredPrompt] =
 		useState<BeforeInstallPromptEvent | null>(null);
 	const [isIosDeviceState] = useState(() => isIosDevice());
-	const [isInstalled, setIsInstalled] = useState(() => isStandaloneMode());
 	const [isCollapsed, setIsCollapsed] = useState(() => isDismissed());
+	const isInstalled = useSyncExternalStore(
+		subscribeToInstallState,
+		getInstalledSnapshot,
+		getInstalledServerSnapshot,
+	);
 
 	useEffect(() => {
-		if (typeof window === "undefined") {
-			return;
-		}
-
-		if (isStandaloneMode()) {
+		if (typeof window === "undefined" || isStandaloneMode()) {
 			return;
 		}
 
@@ -77,7 +110,6 @@ const PwaInstallPrompt = () => {
 
 		const handleAppInstalled = () => {
 			setDeferredPrompt(null);
-			setIsInstalled(true);
 		};
 
 		window.addEventListener(
@@ -122,7 +154,6 @@ const PwaInstallPrompt = () => {
 
 		if (outcome === "accepted") {
 			setDeferredPrompt(null);
-			setIsInstalled(true);
 			return;
 		}
 

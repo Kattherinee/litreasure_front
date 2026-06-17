@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 
 import GlobalStyle from "@/shared/theme/GlobalStyle";
+import PwaUpdateManager from "@/shared/ui/PwaUpdateManager/PwaUpdateManager";
 
 function ScrollToTop() {
 	const pathname = usePathname();
@@ -39,6 +40,7 @@ export default function Providers({ children }: { children: ReactNode }) {
 		<QueryClientProvider client={queryClient}>
 			<GlobalStyle />
 			<ScrollToTop />
+			<PwaUpdateManager />
 			{children}
 		</QueryClientProvider>
 	);
