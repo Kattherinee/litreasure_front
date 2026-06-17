@@ -195,16 +195,16 @@ export default PwaInstallPrompt;
 
 const PromptWrap = styled.div`
 	position: fixed;
-	right: 1rem;
-	bottom: calc(1rem + env(safe-area-inset-bottom));
+	top: calc(1rem + env(safe-area-inset-top));
+	right: calc(1rem + env(safe-area-inset-right));
 	z-index: 1350;
 	width: min(24rem, calc(100vw - 1.5rem));
 
 	@media (max-width: ${theme.rubberSize.tablet}) {
 		right: 0.75rem;
-		bottom: calc(5.25rem + env(safe-area-inset-bottom));
-		left: 0.75rem;
-		width: auto;
+		top: calc(0.75rem + env(safe-area-inset-top));
+		left: auto;
+		width: min(22rem, calc(100vw - 1.5rem));
 	}
 `;
 
@@ -225,15 +225,15 @@ const Card = styled.aside`
 `;
 
 const CollapsedButton = styled.button`
-	display: flex;
-	width: 100%;
+	display: inline-flex;
+	width: 3.25rem;
+	height: 3.25rem;
 	align-items: center;
-	justify-content: space-between;
-	gap: 0.75rem;
+	justify-content: center;
 	border: 0.0625rem solid rgb(238 179 141 / 0.42);
-	border-radius: 999px;
+	border-radius: 50%;
 	background: rgb(35 61 77 / 0.94);
-	padding: 0.75rem 0.95rem;
+	padding: 0;
 	color: ${theme.colors.invertedText};
 	cursor: pointer;
 	box-shadow: 0 1rem 2.2rem rgb(4 18 26 / 0.2);
@@ -250,22 +250,27 @@ const CollapsedEyebrow = styled.span`
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	border-radius: 999px;
-	background: rgb(218 142 91 / 0.18);
-	padding: 0.3rem 0.55rem;
+	width: 2.2rem;
+	height: 2.2rem;
+	border-radius: 50%;
+	background: rgb(218 142 91 / 0.2);
 	color: ${theme.colors.orangeLight};
-	font-size: 0.72rem;
+	font-size: 0.78rem;
 	font-weight: 700;
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
 `;
 
 const CollapsedText = styled.span`
-	color: rgb(242 239 237 / 0.94);
-	font-family: ${theme.fonts.sans};
-	font-size: 0.92rem;
-	font-weight: 700;
-	line-height: 1.2;
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	overflow: hidden;
+	border: 0;
+	margin: -1px;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
 `;
 
 const CloseButton = styled.button`
