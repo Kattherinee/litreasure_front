@@ -307,7 +307,7 @@ const BookCover = styled.img<{ $isLoaded: boolean }>`
 	display: block;
 	width: 100%;
 	height: 100%;
-	object-fit: cover;
+	object-fit: fill;
 	opacity: ${({ $isLoaded }) => ($isLoaded ? 1 : 0)};
 	transition: opacity 220ms ease;
 `;
