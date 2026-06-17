@@ -122,15 +122,20 @@ export const ModeFilter = <TValue extends string>({
 );
 
 interface IResultsFilterBadgeProps {
+	className?: string;
 	label: string;
 	total: number;
 }
 
 export const ResultsFilterBadge = ({
+	className,
 	label,
 	total,
 }: IResultsFilterBadgeProps) => (
-	<ResultsBadge aria-label={`Found ${label}: ${total}`}>
+	<ResultsBadge
+		aria-label={`Found ${label}: ${total}`}
+		className={className}
+	>
 		<ResultsNumber>{total}</ResultsNumber>
 		<ResultsText>{label}</ResultsText>
 	</ResultsBadge>
@@ -197,15 +202,10 @@ export const Filters = styled.div`
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
-	@media (max-width: 40rem) {
-		grid-template-columns: repeat(5, minmax(12rem, 1fr));
-		overflow-x: auto;
-		padding-bottom: 0.75rem;
-		scrollbar-width: none;
-
-		&::-webkit-scrollbar {
-			display: none;
-		}
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		grid-template-columns: minmax(0, 1fr);
+		overflow: visible;
+		padding-bottom: 0;
 	}
 `;
 
@@ -223,6 +223,54 @@ export const ResultsBadge = styled.div`
 
 	@media (max-width: 72rem) {
 		justify-self: start;
+	}
+`;
+
+export const MobileFiltersBar = styled.div`
+	display: none;
+
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-bottom: 0.75rem;
+	}
+`;
+
+export const MobileFiltersToggle = styled.button`
+	display: inline-flex;
+	min-height: 2.35rem;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.55rem;
+	border: 0.0625rem solid rgb(211 202 196 / 0.72);
+	border-radius: 0.9rem;
+	background: ${theme.colors.surface};
+	padding: 0.48rem 0.9rem;
+	color: ${theme.colors.foreground};
+	cursor: pointer;
+	font: inherit;
+	font-size: 0.9rem;
+	font-weight: 700;
+	white-space: nowrap;
+
+	& svg {
+		transition: transform 160ms ease;
+	}
+
+	& svg[data-open="true"] {
+		transform: rotate(180deg);
+	}
+`;
+
+export const MobileFiltersDrawer = styled.div<{ $isOpen: boolean }>`
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
+		border: 0.0625rem solid rgb(211 202 196 / 0.72);
+		border-radius: 1rem;
+		background: rgb(255 255 255 / 0.52);
+		padding: 0.9rem;
+		box-shadow: 0 0.75rem 2rem rgb(4 18 26 / 0.08);
 	}
 `;
 

@@ -2,6 +2,7 @@
 
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { theme } from "@/shared/theme";
@@ -9,6 +10,29 @@ import { theme } from "@/shared/theme";
 const PageBackButton = () => {
 	const pathname = usePathname();
 	const router = useRouter();
+	const [isStandalone, setIsStandalone] = useState(false);
+
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+
+		const mediaQuery = window.matchMedia("(display-mode: standalone)");
+		const updateStandalone = () => {
+			setIsStandalone(
+				mediaQuery.matches ||
+					Boolean(
+						(window.navigator as Navigator & { standalone?: boolean })
+							.standalone,
+					),
+			);
+		};
+
+		updateStandalone();
+		mediaQuery.addEventListener("change", updateStandalone);
+
+		return () => {
+			mediaQuery.removeEventListener("change", updateStandalone);
+		};
+	}, []);
 
 	if (pathname === "/") {
 		return null;
@@ -25,6 +49,7 @@ const PageBackButton = () => {
 
 	return (
 		<BackButton
+			$isStandalone={isStandalone}
 			aria-label="Go back"
 			title="Go back"
 			type="button"
@@ -38,9 +63,9 @@ const PageBackButton = () => {
 
 export default PageBackButton;
 
-const BackButton = styled.button`
+const BackButton = styled.button<{ $isStandalone: boolean }>`
 	position: fixed;
-	top: 2rem;
+	top: ${({ $isStandalone }) => ($isStandalone ? "3rem" : "1rem")};
 	left: calc(0.9rem + env(safe-area-inset-left));
 	z-index: 1400;
 	display: inline-flex;

@@ -6,6 +6,12 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import styled from "styled-components";
 
 import { CreateAuthorModal } from "@/components/pages/author/CreateAuthorModal";
+import {
+	MobileFiltersBar,
+	MobileFiltersDrawer,
+	MobileFiltersToggle,
+	ResultsFilterBadge,
+} from "@/components/pages/filters/AppFilters";
 import { MyCreatorsTabs } from "@/components/pages/my-treasures/tabs/MyCreatorsTabs";
 import type { IMyCreatorsTab } from "@/components/pages/my-treasures/tabs/MyCreatorsTabs";
 import type { IAuthorsSort } from "@/shared/api/authors";
@@ -33,6 +39,7 @@ const MyAuthorsPage = () => {
 	const [page, setPage] = useState(1);
 	const [sort, setSort] = useState<IAuthorsSort>("popular");
 	const [isSortOpen, setIsSortOpen] = useState(false);
+	const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 	const [isCreateAuthorOpen, setIsCreateAuthorOpen] = useState(false);
 	const [activeTab, setActiveTab] = useState<IMyCreatorsTab>("all");
 	const params = useMemo(
@@ -110,50 +117,66 @@ const MyAuthorsPage = () => {
 						}}
 					/>
 
-					<FiltersBar
-						onBlur={(event) => {
-							if (
-								!event.currentTarget.contains(
-									event.relatedTarget as Node | null,
-								)
-							) {
-								setIsSortOpen(false);
-							}
-						}}
-					>
-						<DropdownField>
-							<FilterLabel>Search type</FilterLabel>
-							<DropdownButton
-								aria-expanded={isSortOpen}
+					<FiltersArea>
+						<MobileFiltersBar>
+							<MobileFiltersToggle
 								type="button"
-								onClick={() => setIsSortOpen((current) => !current)}
+								onClick={() => setIsFiltersOpen((current) => !current)}
 							>
-								<DropdownValue>{selectedSortOption.label}</DropdownValue>
-								<ChevronIcon $isOpen={isSortOpen} aria-hidden="true" />
-							</DropdownButton>
-							<DropdownMenu $isOpen={isSortOpen}>
-								{sortOptions.map((option) => (
-									<DropdownMenuItem
-										key={option.value}
-										$isSelected={option.value === sort}
-										type="button"
-										onClick={() => {
-											setSort(option.value);
-											setPage(1);
-											setIsSortOpen(false);
-										}}
-									>
-										{option.label}
-									</DropdownMenuItem>
-								))}
-							</DropdownMenu>
-						</DropdownField>
+								<span>Filters</span>
+								<KeyboardArrowDownIcon
+									aria-hidden="true"
+									data-open={isFiltersOpen ? "true" : "false"}
+								/>
+							</MobileFiltersToggle>
+							<ResultsFilterBadge label="authors" total={total} />
+						</MobileFiltersBar>
+						<FiltersBar
+							$isOpen={isFiltersOpen}
+							onBlur={(event) => {
+								if (
+									!event.currentTarget.contains(
+										event.relatedTarget as Node | null,
+									)
+								) {
+									setIsSortOpen(false);
+								}
+							}}
+						>
+							<DropdownField>
+								<FilterLabel>Search type</FilterLabel>
+								<DropdownButton
+									aria-expanded={isSortOpen}
+									type="button"
+									onClick={() => setIsSortOpen((current) => !current)}
+								>
+									<DropdownValue>{selectedSortOption.label}</DropdownValue>
+									<ChevronIcon $isOpen={isSortOpen} aria-hidden="true" />
+								</DropdownButton>
+								<DropdownMenu $isOpen={isSortOpen}>
+									{sortOptions.map((option) => (
+										<DropdownMenuItem
+											key={option.value}
+											$isSelected={option.value === sort}
+											type="button"
+											onClick={() => {
+												setSort(option.value);
+												setPage(1);
+												setIsSortOpen(false);
+											}}
+										>
+											{option.label}
+										</DropdownMenuItem>
+									))}
+								</DropdownMenu>
+							</DropdownField>
 
-						<ResultsBadge aria-label={`Authors found: ${total}`}>
-							<ResultsNumber>{total}</ResultsNumber>
-							<ResultsText>authors</ResultsText>
-						</ResultsBadge>
-					</FiltersBar>
+							<ResultsBadge aria-label={`Authors found: ${total}`}>
+								<ResultsNumber>{total}</ResultsNumber>
+								<ResultsText>authors</ResultsText>
+							</ResultsBadge>
+						</FiltersBar>
+					</FiltersArea>
 				</ControlsRow>
 
 				{isLoading ? (
@@ -209,13 +232,32 @@ const ControlsRow = styled.div`
 	}
 `;
 
-const FiltersBar = styled.div`
+const FiltersArea = styled.div`
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		width: 100%;
+	}
+`;
+
+const FiltersBar = styled(MobileFiltersDrawer)`
 	display: flex;
 	align-items: end;
 	justify-content: space-between;
 	gap: 0.8rem;
 	min-width: 0;
 	flex: 0 0 auto;
+
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		flex-direction: column;
+		align-items: stretch;
+
+		& > :last-child {
+			display: none;
+		}
+
+		& > :first-child {
+			width: 100%;
+		}
+	}
 `;
 
 const DropdownField = styled.div`

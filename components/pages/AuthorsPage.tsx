@@ -4,6 +4,12 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useMemo, useState } from "react";
 import styled from "styled-components";
 
+import {
+	MobileFiltersBar,
+	MobileFiltersDrawer,
+	MobileFiltersToggle,
+	ResultsFilterBadge,
+} from "@/components/pages/filters/AppFilters";
 import type { IAuthorsGenreMode, IAuthorsSort } from "@/shared/api/authors";
 import { useAuthorsQuery } from "@/shared/api/authors";
 import { theme } from "@/shared/theme";
@@ -11,7 +17,11 @@ import { AuthorCard } from "@/shared/ui/AuthorCard";
 import { AppPagination } from "@/shared/ui/AppPagination";
 import { SkeletonBlock } from "@/shared/ui/Skeleton";
 
-import { AuthorsFilters, BOOKS_RANGE_MAX } from "./AuthorsFilters";
+import {
+	AuthorsFilters,
+	BOOKS_RANGE_MAX,
+	ResultsBadge as AuthorsResultsBadge,
+} from "./AuthorsFilters";
 
 const AUTHORS_LIMIT = 27;
 
@@ -63,16 +73,19 @@ const AuthorsPage = () => {
 				<Lead>Public authors and your personal author records.</Lead>
 
 				<FiltersDock>
-					<FiltersToggle
-						type="button"
-						onClick={() => setIsFiltersOpen((current) => !current)}
-					>
-						<span>Filters</span>
-						<KeyboardArrowDownIcon
-							aria-hidden="true"
-							data-open={isFiltersOpen ? "true" : "false"}
-						/>
-					</FiltersToggle>
+					<MobileFiltersBar>
+						<MobileFiltersToggle
+							type="button"
+							onClick={() => setIsFiltersOpen((current) => !current)}
+						>
+							<span>Filters</span>
+							<KeyboardArrowDownIcon
+								aria-hidden="true"
+								data-open={isFiltersOpen ? "true" : "false"}
+							/>
+						</MobileFiltersToggle>
+						<ResultsFilterBadge label="authors" total={total} />
+					</MobileFiltersBar>
 					<FiltersDrawer $isOpen={isFiltersOpen}>
 						<AuthorsFilters
 							booksRange={booksRange}
@@ -184,38 +197,11 @@ const FiltersDock = styled.div`
 	margin-top: 1rem;
 `;
 
-const FiltersToggle = styled.button`
-	display: none;
-	align-items: center;
-	justify-content: space-between;
-	gap: 0.75rem;
-	width: 100%;
-	border: 0.0625rem solid rgb(211 202 196 / 0.72);
-	border-radius: 0.9rem;
-	background: ${theme.colors.surface};
-	padding: 0.8rem 1rem;
-	color: ${theme.colors.foreground};
-	cursor: pointer;
-	font: inherit;
-	font-weight: 700;
-
-	& svg {
-		transition: transform 160ms ease;
-	}
-
-	& svg[data-open="true"] {
-		transform: rotate(180deg);
-	}
-
+const FiltersDrawer = styled(MobileFiltersDrawer)`
 	@media (max-width: ${theme.rubberSize.tablet}) {
-		display: flex;
-	}
-`;
-
-const FiltersDrawer = styled.div<{ $isOpen: boolean }>`
-	@media (max-width: ${theme.rubberSize.tablet}) {
-		display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
-		margin-top: 0.75rem;
+		& ${AuthorsResultsBadge} {
+			display: none;
+		}
 	}
 `;
 

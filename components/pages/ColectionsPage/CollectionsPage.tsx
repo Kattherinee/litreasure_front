@@ -11,11 +11,15 @@ import {
 	FilterEmpty,
 	Filters,
 	ModeFilter,
+	MobileFiltersBar,
+	MobileFiltersToggle,
 	ResultsFilterBadge,
+	ResultsBadge,
 	SearchDropdownFilter,
 	SelectFilter,
 	SelectedFilters,
 } from "@/components/pages/filters/AppFilters";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
 	type ICollectionFilterMode,
 	type ICollectionSort,
@@ -51,6 +55,7 @@ const CollectionsPage = () => {
 	const [isSortOpen, setIsSortOpen] = useState(false);
 	const [isTagsOpen, setIsTagsOpen] = useState(false);
 	const [isGenresOpen, setIsGenresOpen] = useState(false);
+	const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 	const [tagSearch, setTagSearch] = useState("");
 	const [genreSearch, setGenreSearch] = useState("");
 	const filtersRef = useRef<HTMLDivElement | null>(null);
@@ -194,7 +199,20 @@ const CollectionsPage = () => {
 			</Hero>
 
 			<Content>
-				<CollectionFilters ref={filtersRef}>
+				<MobileFiltersBar>
+					<MobileFiltersToggle
+						type="button"
+						onClick={() => setIsFiltersOpen((current) => !current)}
+					>
+						<span>Filters</span>
+						<KeyboardArrowDownIcon
+							aria-hidden="true"
+							data-open={isFiltersOpen ? "true" : "false"}
+						/>
+					</MobileFiltersToggle>
+					<ResultsFilterBadge label="collections" total={total} />
+				</MobileFiltersBar>
+				<CollectionFilters $isMobileOpen={isFiltersOpen} ref={filtersRef}>
 					<SelectFilter
 						isOpen={isSortOpen}
 						label="Sort"
@@ -408,6 +426,10 @@ const HeroInner = styled.div`
 	width: min(95vw, ${theme.layout.collectionsPageMaxWidth});
 	margin: 0 auto;
 	padding: 4vw 0 0vw;
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		padding-top: 5rem;
+		width: 95vw;
+	}
 `;
 
 const PageTitle = styled.h1`
@@ -428,12 +450,15 @@ const HeroText = styled.p`
 `;
 
 const Content = styled.section`
-	width: min(95vw, ${theme.layout.collectionsPageMaxWidth});
+	width: 70vw;
 	margin: 0 auto;
 	padding-top: clamp(2rem, 4vw, 3rem);
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		width: 92vw;
+	}
 `;
 
-const CollectionFilters = styled(Filters)`
+const CollectionFilters = styled(Filters)<{ $isMobileOpen: boolean }>`
 	grid-template-columns:
 		minmax(10rem, 0.85fr) minmax(11rem, 1fr) minmax(8.5rem, 0.75fr)
 		minmax(11rem, 1fr) minmax(8.5rem, 0.75fr) auto;
@@ -443,13 +468,16 @@ const CollectionFilters = styled(Filters)`
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
-	@media (max-width: 40rem) {
-		grid-template-columns: repeat(6, minmax(12rem, 1fr));
-		overflow-x: auto;
-		padding-bottom: 0.75rem;
-		scrollbar-width: none;
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		display: ${({ $isMobileOpen }) => ($isMobileOpen ? "grid" : "none")};
+		grid-template-columns: minmax(0, 1fr);
+		margin-top: 0;
+		overflow: visible;
+		padding: 0;
+	}
 
-		&::-webkit-scrollbar {
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		& ${ResultsBadge} {
 			display: none;
 		}
 	}

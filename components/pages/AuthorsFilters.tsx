@@ -304,25 +304,20 @@ export const Filters = styled.div`
 		minmax(10rem, 0.85fr) minmax(12rem, 1.2fr) minmax(16rem, 1.7fr)
 		minmax(10rem, 0.8fr) auto;
 	margin-top: 0.75rem;
-	background: ${theme.colors.background};
+
 	padding: 0.35rem 0 0.65rem;
 
 	@media (max-width: 72rem) {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
-	@media (max-width: 40rem) {
+	@media (max-width: ${theme.rubberSize.tablet}) {
 		position: static;
 		top: auto;
 		margin-top: 0;
-		grid-template-columns: repeat(5, minmax(12rem, 1fr));
-		overflow-x: auto;
-		padding-bottom: 0.5rem;
-		scrollbar-width: none;
-
-		&::-webkit-scrollbar {
-			display: none;
-		}
+		grid-template-columns: minmax(0, 1fr);
+		overflow: visible;
+		padding-bottom: 0;
 	}
 `;
 
