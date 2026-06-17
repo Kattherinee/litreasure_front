@@ -4,6 +4,7 @@ import Providers from "@/app/providers";
 import StyledComponentsRegistry from "@/app/styled-components-registry";
 import { Header } from "@/shared/ui/Header";
 import PageBackButton from "@/shared/ui/PageBackButton/PageBackButton";
+import { PwaInstallPrompt } from "@/shared/ui/PwaInstallPrompt";
 
 import "react-advanced-cropper/dist/style.css";
 import "./globals.css";
@@ -48,6 +49,7 @@ export default function RootLayout({
 					<Providers>
 						<Header />
 						<PageBackButton />
+						<PwaInstallPrompt />
 						<main>{children}</main>
 					</Providers>
 				</StyledComponentsRegistry>
