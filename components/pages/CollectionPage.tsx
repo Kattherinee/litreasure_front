@@ -272,6 +272,7 @@ const Hero = styled.section<{ $coverUrl?: string }>`
 	padding: clamp(1rem, 2vw, 2.4rem);
 
 	@media (max-width: 42rem) {
+		padding-top: 2.5rem;
 		background:
 			linear-gradient(rgb(232 226 222 / 0.92), rgb(232 226 222 / 0.92)),
 			${({ $coverUrl }) =>
