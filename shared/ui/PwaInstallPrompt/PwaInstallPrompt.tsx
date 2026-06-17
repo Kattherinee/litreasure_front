@@ -195,14 +195,14 @@ export default PwaInstallPrompt;
 
 const PromptWrap = styled.div`
 	position: fixed;
-	top: calc(1rem + env(safe-area-inset-top));
 	right: calc(1rem + env(safe-area-inset-right));
+	bottom: calc(1rem + env(safe-area-inset-bottom));
 	z-index: 1350;
 	width: min(24rem, calc(100vw - 1.5rem));
 
 	@media (max-width: ${theme.rubberSize.tablet}) {
 		right: 0.75rem;
-		top: calc(0.75rem + env(safe-area-inset-top));
+		bottom: calc(5.25rem + env(safe-area-inset-bottom));
 		left: auto;
 		width: min(22rem, calc(100vw - 1.5rem));
 	}
