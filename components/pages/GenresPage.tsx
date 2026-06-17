@@ -288,10 +288,6 @@ const Page = styled.div`
 	min-height: 100dvh;
 	background: ${theme.colors.background};
 	padding-bottom: 2rem;
-
-	@media (max-width: ${theme.rubberSize.tablet}) {
-		padding-top: 2rem;
-	}
 `;
 
 const Hero = styled.section`
@@ -301,6 +297,9 @@ const Hero = styled.section`
 	);
 	margin: 0 auto;
 	padding: clamp(1.8rem, 3.6vw, 3rem) 0 0.85rem;
+	@media (max-width: 52rem) {
+		padding-top: 2rem;
+	}
 `;
 
 const HeroTop = styled.div`

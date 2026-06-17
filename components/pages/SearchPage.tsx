@@ -1205,7 +1205,7 @@ const SuggestionButton = styled.button`
 const ResultsNumber = styled.span`
 	color: ${theme.colors.orangeDark};
 	font-family: ${theme.fonts.serif};
-	font-size: 1.3vw;
+	font-size: 1.3rem;
 	font-weight: 600;
 	line-height: 1;
 	@media (max-width: ${theme.rubberSize.tablet}) {
@@ -1215,7 +1215,7 @@ const ResultsNumber = styled.span`
 
 const ResultsText = styled.span`
 	color: ${theme.colors.softForeground};
-	font-size: 0.96vw;
+	font-size: 0.96rem;
 	line-height: 1;
 	font-weight: 500;
 	@media (max-width: ${theme.rubberSize.tablet}) {
