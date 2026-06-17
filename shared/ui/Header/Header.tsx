@@ -28,6 +28,7 @@ import { theme } from "@/shared/theme";
 import { BookSearch } from "@/shared/ui/BookSearch";
 import { Button } from "@/shared/ui/Button";
 import { ConfirmModal } from "@/shared/ui/ConfirmModal";
+import { OPEN_PWA_INSTALL_PROMPT_EVENT } from "@/shared/ui/PwaInstallPrompt/PwaInstallPrompt";
 
 const navItems = [
 	{
@@ -66,6 +67,14 @@ const finePointer = "@media (hover: hover) and (pointer: fine)";
 const isAuthRequiredRedirect = () =>
 	typeof window !== "undefined" &&
 	new URLSearchParams(window.location.search).get("auth") === "required";
+const isStandaloneMode = () =>
+	typeof window !== "undefined" &&
+	(window.matchMedia("(display-mode: standalone)").matches ||
+		window.matchMedia("(display-mode: fullscreen)").matches ||
+		window.matchMedia("(display-mode: minimal-ui)").matches ||
+		Boolean(
+			(window.navigator as Navigator & { standalone?: boolean }).standalone,
+		));
 
 const Header = () => {
 	const pathname = usePathname();
@@ -82,6 +91,7 @@ const Header = () => {
 	const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 	const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const [isStandalonePwa, setIsStandalonePwa] = useState(() => isStandaloneMode());
 	const mobileMenuRef = useRef<HTMLDivElement | null>(null);
 	const session = useAuthStore((state) => state.session);
 	const logout = useAuthStore((state) => state.logout);
@@ -188,6 +198,11 @@ const Header = () => {
 		logout();
 		closeLogoutConfirm();
 	};
+	const openPwaInstallPrompt = () => {
+		window.dispatchEvent(new Event(OPEN_PWA_INSTALL_PROMPT_EVENT));
+		closeProfileMenu();
+		closeMobileMenu();
+	};
 
 	useEffect(() => {
 		if (!isMobileMenuOpen) {
@@ -222,6 +237,41 @@ const Header = () => {
 			document.removeEventListener("keydown", handleKeyDown);
 		};
 	}, [isMobileMenuOpen]);
+
+	useEffect(() => {
+		if (typeof window === "undefined") {
+			return;
+		}
+
+		const standaloneMediaQuery = window.matchMedia("(display-mode: standalone)");
+		const fullscreenMediaQuery = window.matchMedia("(display-mode: fullscreen)");
+		const minimalUiMediaQuery = window.matchMedia("(display-mode: minimal-ui)");
+
+		const handleEnvironmentChange = () => {
+			setIsStandalonePwa(isStandaloneMode());
+		};
+
+		standaloneMediaQuery.addEventListener("change", handleEnvironmentChange);
+		fullscreenMediaQuery.addEventListener("change", handleEnvironmentChange);
+		minimalUiMediaQuery.addEventListener("change", handleEnvironmentChange);
+		window.addEventListener("pageshow", handleEnvironmentChange);
+
+		return () => {
+			standaloneMediaQuery.removeEventListener(
+				"change",
+				handleEnvironmentChange,
+			);
+			fullscreenMediaQuery.removeEventListener(
+				"change",
+				handleEnvironmentChange,
+			);
+			minimalUiMediaQuery.removeEventListener(
+				"change",
+				handleEnvironmentChange,
+			);
+			window.removeEventListener("pageshow", handleEnvironmentChange);
+		};
+	}, []);
 
 	if (isWelcomePage) {
 		return null;
@@ -343,6 +393,19 @@ const Header = () => {
 										Profile
 										<ProfileMenuHint>Edit</ProfileMenuHint>
 									</ProfileMenuLink>
+									{!isStandalonePwa ? (
+										<InstallPromptMenuButton
+											type="button"
+											onClick={openPwaInstallPrompt}
+										>
+											<InstallPromptTitle>
+												Still haven&apos;t installed the app?
+											</InstallPromptTitle>
+											<InstallPromptHint>
+												Open the PWA install tip
+											</InstallPromptHint>
+										</InstallPromptMenuButton>
+									) : null}
 									<ProfileMenuDivider />
 									<ProfileLogoutItem type="button" onClick={openLogoutConfirm}>
 										Log out
@@ -442,6 +505,17 @@ const Header = () => {
 										<PersonRoundedIcon aria-hidden="true" />
 										<span>Profile</span>
 									</MobileMenuLink>
+									{!isStandalonePwa ? (
+										<InstallPromptMobileAction
+											type="button"
+											onClick={openPwaInstallPrompt}
+										>
+											<span>Still haven&apos;t installed the app?</span>
+											<InstallPromptHint>
+												Open the PWA install tip
+											</InstallPromptHint>
+										</InstallPromptMobileAction>
+									) : null}
 									<MobileMenuDivider />
 									<MobileMenuAction type="button" onClick={openLogoutConfirm}>
 										<LogoutRoundedIcon aria-hidden="true" />
@@ -462,6 +536,17 @@ const Header = () => {
 										<CollectionsBookmarkRoundedIcon aria-hidden="true" />
 										<span>Collections</span>
 									</MobileMenuLink>
+									{!isStandalonePwa ? (
+										<InstallPromptMobileAction
+											type="button"
+											onClick={openPwaInstallPrompt}
+										>
+											<span>Still haven&apos;t installed the app?</span>
+											<InstallPromptHint>
+												Open the PWA install tip
+											</InstallPromptHint>
+										</InstallPromptMobileAction>
+									) : null}
 									<MobileMenuDivider />
 									<MobileMenuAction
 										type="button"
@@ -1184,6 +1269,46 @@ const ProfileMenuDivider = styled.div`
 	background: rgb(186 183 180 / 0.5);
 `;
 
+const InstallPromptMenuButton = styled.button`
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	align-items: flex-start;
+	border: 0.0625rem solid rgb(158 184 206 / 0.42);
+	border-radius: 0.75rem;
+	background: linear-gradient(
+		180deg,
+		rgb(233 240 247 / 0.96),
+		rgb(243 246 249 / 0.98)
+	);
+	padding: 0.72rem 0.8rem;
+	color: ${theme.colors.bluePrimary};
+	font: inherit;
+	text-align: left;
+	cursor: pointer;
+
+	&:hover,
+	&:focus-visible {
+		border-color: rgb(134 171 201 / 0.7);
+		outline: none;
+	}
+`;
+
+const InstallPromptTitle = styled.span`
+	color: rgb(88 110 129);
+	font-size: 0.92rem;
+	font-weight: 700;
+	line-height: 1.25;
+`;
+
+const InstallPromptHint = styled.span`
+	margin-top: 0.2rem;
+	color: rgb(105 141 170);
+	font-size: 0.78rem;
+	font-weight: 500;
+	line-height: 1.25;
+`;
+
 const ProfileLogoutItem = styled(ProfileMenuItem)`
 	color: #d4641c;
 
@@ -1191,5 +1316,40 @@ const ProfileLogoutItem = styled(ProfileMenuItem)`
 	&:focus-visible {
 		background: rgb(212 100 28 / 0.12);
 		color: #b64f12;
+	}
+`;
+
+const InstallPromptMobileAction = styled(MobileMenuAction)`
+	flex-direction: column;
+	align-items: flex-start;
+	border: 0.0625rem solid rgb(158 184 206 / 0.34);
+	background: linear-gradient(
+		180deg,
+		rgb(232 239 246 / 0.88),
+		rgb(243 246 249 / 0.96)
+	);
+	color: rgb(88 110 129);
+
+	span:first-child {
+		color: inherit;
+		font-size: 0.92rem;
+		font-weight: 700;
+		line-height: 1.25;
+	}
+
+	& svg {
+		display: none;
+	}
+
+	${finePointer} {
+		&:hover,
+		&:focus-visible {
+			background: linear-gradient(
+				180deg,
+				rgb(226 235 244 / 0.98),
+				rgb(239 244 248 / 0.98)
+			);
+			color: rgb(70 99 122);
+		}
 	}
 `;
