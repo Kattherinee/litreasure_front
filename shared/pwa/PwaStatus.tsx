@@ -72,11 +72,14 @@ const PwaStatus = () => {
 			);
 
 			try {
-				await fetch(`${API_BASE_URL}/books?limit=1&network-check=${Date.now()}`, {
-					cache: "no-store",
-					mode: "no-cors",
-					signal: controller.signal,
-				});
+				await fetch(
+					`${API_BASE_URL}/books?limit=1&network-check=${Date.now()}`,
+					{
+						cache: "no-store",
+						mode: "no-cors",
+						signal: controller.signal,
+					},
+				);
 
 				return true;
 			} catch {
@@ -174,7 +177,12 @@ const PwaStatus = () => {
 	);
 	const showOfflineHint = !isOnline && !isOfflineHintDismissed;
 
-	if (!showInstallHint && !showOfflineHint && isOnline && syncState === "idle") {
+	if (
+		!showInstallHint &&
+		!showOfflineHint &&
+		isOnline &&
+		syncState === "idle"
+	) {
 		return null;
 	}
 
