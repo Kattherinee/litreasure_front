@@ -57,8 +57,9 @@ const setDismissed = () => {
 const PwaInstallPrompt = () => {
 	const [deferredPrompt, setDeferredPrompt] =
 		useState<BeforeInstallPromptEvent | null>(null);
-	const [isIosPromptVisible, setIsIosPromptVisible] = useState(false);
+	const [isIosDeviceState, setIsIosDeviceState] = useState(false);
 	const [isInstalled, setIsInstalled] = useState(true);
+	const [isCollapsed, setIsCollapsed] = useState(false);
 
 	useEffect(() => {
 		if (typeof window === "undefined") {
@@ -67,13 +68,11 @@ const PwaInstallPrompt = () => {
 
 		const standalone = isStandaloneMode();
 		setIsInstalled(standalone);
+		setIsIosDeviceState(isIosDevice());
+		setIsCollapsed(isDismissed());
 
-		if (standalone || isDismissed()) {
+		if (standalone) {
 			return;
-		}
-
-		if (isIosDevice()) {
-			setIsIosPromptVisible(true);
 		}
 
 		const handleBeforeInstallPrompt = (event: Event) => {
@@ -83,7 +82,6 @@ const PwaInstallPrompt = () => {
 
 		const handleAppInstalled = () => {
 			setDeferredPrompt(null);
-			setIsIosPromptVisible(false);
 			setIsInstalled(true);
 		};
 
@@ -107,16 +105,16 @@ const PwaInstallPrompt = () => {
 	}
 
 	const showAndroidPrompt = Boolean(deferredPrompt);
-	const showIosPrompt = isIosPromptVisible && !showAndroidPrompt;
+	const showIosPrompt = isIosDeviceState && !showAndroidPrompt;
+	const canShowPrompt = showAndroidPrompt || showIosPrompt;
 
-	if (!showAndroidPrompt && !showIosPrompt) {
+	if (!canShowPrompt) {
 		return null;
 	}
 
 	const handleClose = () => {
 		setDismissed();
-		setDeferredPrompt(null);
-		setIsIosPromptVisible(false);
+		setIsCollapsed(true);
 	};
 
 	const handleInstall = async () => {
@@ -126,59 +124,69 @@ const PwaInstallPrompt = () => {
 
 		await deferredPrompt.prompt();
 		const { outcome } = await deferredPrompt.userChoice;
-		setDeferredPrompt(null);
 
 		if (outcome === "accepted") {
+			setDeferredPrompt(null);
 			setIsInstalled(true);
 			return;
 		}
 
 		setDismissed();
+		setIsCollapsed(true);
 	};
 
 	return (
 		<PromptWrap>
-			<Card>
-				<CloseButton
-					aria-label="Hide install prompt"
-					type="button"
-					onClick={handleClose}
-				>
-					×
-				</CloseButton>
-				<Eyebrow>App install</Eyebrow>
-				<Title>
-					{showAndroidPrompt
-						? "Install Litreasure for quicker access"
-						: "Add Litreasure to your Home Screen"}
-				</Title>
-				<Description>
+			{isCollapsed ? (
+				<CollapsedButton type="button" onClick={() => setIsCollapsed(false)}>
+					<CollapsedEyebrow>PWA</CollapsedEyebrow>
+					<CollapsedText>
+						{showAndroidPrompt ? "Install app" : "How to add app"}
+					</CollapsedText>
+				</CollapsedButton>
+			) : (
+				<Card>
+					<CloseButton
+						aria-label="Hide install prompt"
+						type="button"
+						onClick={handleClose}
+					>
+						×
+					</CloseButton>
+					<Eyebrow>App install</Eyebrow>
+					<Title>
+						{showAndroidPrompt
+							? "Install Litreasure for quicker access"
+							: "Add Litreasure to your Home Screen"}
+					</Title>
+					<Description>
+						{showAndroidPrompt ? (
+							<>Open Litreasure like a native app and keep it one tap away.</>
+						) : (
+							<>
+								On iPhone or iPad, tap <Strong>Share</Strong> in Safari, then
+								choose <Strong>Add to Home Screen</Strong>.
+							</>
+						)}
+					</Description>
 					{showAndroidPrompt ? (
-						<>Open Litreasure like a native app and keep it one tap away.</>
+						<PrimaryButton type="button" onClick={handleInstall}>
+							Install app
+						</PrimaryButton>
 					) : (
-						<>
-							On iPhone or iPad, tap <Strong>Share</Strong> in Safari, then
-							choose <Strong>Add to Home Screen</Strong>.
-						</>
+						<Steps>
+							<Step>
+								<StepBadge>1</StepBadge>
+								<span>Tap Share in the Safari toolbar</span>
+							</Step>
+							<Step>
+								<StepBadge>2</StepBadge>
+								<span>Select Add to Home Screen</span>
+							</Step>
+						</Steps>
 					)}
-				</Description>
-				{showAndroidPrompt ? (
-					<PrimaryButton type="button" onClick={handleInstall}>
-						Install app
-					</PrimaryButton>
-				) : (
-					<Steps>
-						<Step>
-							<StepBadge>1</StepBadge>
-							<span>Tap Share in the Safari toolbar</span>
-						</Step>
-						<Step>
-							<StepBadge>2</StepBadge>
-							<span>Select Add to Home Screen</span>
-						</Step>
-					</Steps>
-				)}
-			</Card>
+				</Card>
+			)}
 		</PromptWrap>
 	);
 };
@@ -214,6 +222,50 @@ const Card = styled.aside`
 	color: ${theme.colors.invertedText};
 	box-shadow: 0 1rem 2.5rem rgb(4 18 26 / 0.24);
 	backdrop-filter: blur(16px) saturate(1.2);
+`;
+
+const CollapsedButton = styled.button`
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	border: 0.0625rem solid rgb(238 179 141 / 0.42);
+	border-radius: 999px;
+	background: rgb(35 61 77 / 0.94);
+	padding: 0.75rem 0.95rem;
+	color: ${theme.colors.invertedText};
+	cursor: pointer;
+	box-shadow: 0 1rem 2.2rem rgb(4 18 26 / 0.2);
+	backdrop-filter: blur(16px) saturate(1.2);
+
+	&:hover,
+	&:focus-visible {
+		border-color: ${theme.colors.orangeLight};
+		outline: none;
+	}
+`;
+
+const CollapsedEyebrow = styled.span`
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 999px;
+	background: rgb(218 142 91 / 0.18);
+	padding: 0.3rem 0.55rem;
+	color: ${theme.colors.orangeLight};
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+`;
+
+const CollapsedText = styled.span`
+	color: rgb(242 239 237 / 0.94);
+	font-family: ${theme.fonts.sans};
+	font-size: 0.92rem;
+	font-weight: 700;
+	line-height: 1.2;
 `;
 
 const CloseButton = styled.button`

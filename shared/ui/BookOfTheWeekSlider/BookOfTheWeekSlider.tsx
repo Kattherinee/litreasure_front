@@ -305,11 +305,14 @@ const BookCoverWrap = styled.div`
 
 const BookCover = styled.img<{ $isLoaded: boolean }>`
 	display: block;
-	width: 100%;
-	height: 100%;
+	width: auto;
+	height: 15.75rem;
 	object-fit: fill;
 	opacity: ${({ $isLoaded }) => ($isLoaded ? 1 : 0)};
 	transition: opacity 220ms ease;
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		height: 12.75rem;
+	}
 `;
 
 const BookInfo = styled.div`
