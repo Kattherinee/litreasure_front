@@ -16,6 +16,21 @@ const isTouchDevice = () => {
 	return window.matchMedia("(pointer: coarse)").matches;
 };
 
+const isStandaloneMode = () => {
+	if (typeof window === "undefined") {
+		return false;
+	}
+
+	return (
+		window.matchMedia("(display-mode: standalone)").matches ||
+		window.matchMedia("(display-mode: fullscreen)").matches ||
+		window.matchMedia("(display-mode: minimal-ui)").matches ||
+		Boolean(
+			(window.navigator as Navigator & { standalone?: boolean }).standalone,
+		)
+	);
+};
+
 const clampPullDistance = (distance: number) =>
 	Math.max(0, Math.min(distance, MAX_PULL_DISTANCE));
 
@@ -85,6 +100,7 @@ const PwaUpdateManager = () => {
 	const touchStartYRef = useRef<number | null>(null);
 	const isPullingRef = useRef(false);
 	const [isTouchDeviceState] = useState(() => isTouchDevice());
+	const [isStandalonePwa, setIsStandalonePwa] = useState(() => isStandaloneMode());
 	const [pullDistance, setPullDistance] = useState(0);
 	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [updateReady, setUpdateReady] = useState(false);
@@ -113,6 +129,10 @@ const PwaUpdateManager = () => {
 			}
 
 			window.location.reload();
+		};
+
+		const syncStandaloneState = () => {
+			setIsStandalonePwa(isStandaloneMode());
 		};
 
 		const handleVisibilityChange = () => {
@@ -161,6 +181,8 @@ const PwaUpdateManager = () => {
 			"controllerchange",
 			handleControllerChange,
 		);
+		window.addEventListener("pageshow", syncStandaloneState);
+		document.addEventListener("visibilitychange", syncStandaloneState);
 		document.addEventListener("visibilitychange", handleVisibilityChange);
 		registerServiceWorker();
 
@@ -170,6 +192,8 @@ const PwaUpdateManager = () => {
 				"controllerchange",
 				handleControllerChange,
 			);
+			window.removeEventListener("pageshow", syncStandaloneState);
+			document.removeEventListener("visibilitychange", syncStandaloneState);
 			document.removeEventListener("visibilitychange", handleVisibilityChange);
 		};
 	}, []);
@@ -297,7 +321,7 @@ const PwaUpdateManager = () => {
 				</PullIndicator>
 			) : null}
 
-			{updateReady ? (
+			{updateReady && isStandalonePwa ? (
 				<UpdateChip type="button" onClick={handleUpdateClick}>
 					Update app
 				</UpdateChip>

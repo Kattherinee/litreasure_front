@@ -69,7 +69,7 @@ const subscribeToInstallState = (onStoreChange: () => void) => {
 };
 
 const getInstalledSnapshot = () => isStandaloneMode();
-const getInstalledServerSnapshot = () => false;
+const getInstalledServerSnapshot = () => true;
 
 const isDismissed = () => {
 	if (typeof window === "undefined") {
