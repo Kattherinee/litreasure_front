@@ -12,7 +12,8 @@ export const CarouselViewport = styled.div<{
 	margin-left: ${({ $bleed }) =>
 		$bleed ? "calc(var(--content-side-space) * -1)" : "0"};
 	overflow: ${({ $hasOverflow }) => ($hasOverflow ? "hidden" : "visible")};
-	overscroll-behavior: contain;
+	overscroll-behavior-x: contain;
+	overscroll-behavior-y: auto;
 	padding-block: 0.125rem;
 `;
 
