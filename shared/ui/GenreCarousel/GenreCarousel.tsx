@@ -13,6 +13,8 @@ import { GenrePillSkeleton } from "@/shared/ui/Skeleton";
 const GenreCarousel = () => {
 	const { data: genres = [], isLoading } = useGenresQuery();
 	const [isMounted, setIsMounted] = useState(false);
+	const repeatedGenres =
+		genres.length > 0 ? [...genres, ...genres, ...genres] : genres;
 	const [emblaRef, emblaApi] = useEmblaCarousel(
 		{
 			align: "start",
@@ -54,8 +56,8 @@ const GenreCarousel = () => {
 									<GenrePillSkeleton />
 								</Slide>
 							))
-						: genres.map((genre) => (
-								<Slide key={genre.id}>
+						: repeatedGenres.map((genre, index) => (
+								<Slide key={`${genre.id}-${index}`}>
 									<GenrePill href={`/genres/${genre.slug}`}>
 										{genre.name}
 									</GenrePill>
