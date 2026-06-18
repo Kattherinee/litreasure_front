@@ -78,7 +78,7 @@ const GlobalStyle = createGlobalStyle`
 
 	@media (max-width: ${theme.rubberSize.tablet}) {
 		main {
-			padding-bottom: calc(5.25rem + env(safe-area-inset-bottom));
+			padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
 		}
 	}
 

@@ -27,7 +27,7 @@ export const GoalStep = ({
 		data: averageChallenge,
 		isError: isAverageError,
 		isLoading: isAverageLoading,
-	} = useAverageChallengeQuery("year", yearGoal);
+	} = useAverageChallengeQuery("year");
 	const hasGoal = draftGoal.length > 0 && yearGoal > 0;
 	const averageTarget = averageChallenge?.averageTargetValue ?? 0;
 	const roundedAverageTarget = Math.round(averageTarget);

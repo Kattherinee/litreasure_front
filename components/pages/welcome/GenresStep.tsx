@@ -7,7 +7,7 @@ import { useGenresByCategoryQuery } from "@/shared/api/genres";
 import { theme } from "@/shared/theme";
 import { InputField } from "@/shared/ui/InputField";
 
-import { StepBody } from "./stepStyles";
+import { StepBody, StepDescription } from "./stepStyles";
 import { MIN_SELECTED_GENRES } from "./types";
 
 interface IGenresStepProps {
@@ -18,7 +18,6 @@ interface IGenresStepProps {
 export const GenresStep = ({ selectedGenres, onToggle }: IGenresStepProps) => {
 	const { data } = useGenresByCategoryQuery({
 		includeCounts: true,
-		selected: selectedGenres,
 	});
 	const genreGroups = useMemo(() => data?.groups ?? [], [data?.groups]);
 	const recommendations = useMemo(
@@ -125,6 +124,10 @@ export const GenresStep = ({ selectedGenres, onToggle }: IGenresStepProps) => {
 
 	return (
 		<StepBody>
+			<MobileGenresHint>
+				Choose at least 5 genres. Start with one or more groups, then tap the
+				genres you like below.
+			</MobileGenresHint>
 			<SelectedSummaryRow>
 				{selectedGenres.length > 0 ? (
 					<SelectedGenresCarousel
@@ -255,6 +258,17 @@ export const GenresStep = ({ selectedGenres, onToggle }: IGenresStepProps) => {
 	);
 };
 
+const MobileGenresHint = styled(StepDescription)`
+	display: none;
+
+	@media (max-width: 42rem) {
+		display: block;
+		margin-bottom: 0.35rem;
+		font-size: 0.82rem;
+		line-height: 1.45;
+	}
+`;
+
 const SelectedSummaryRow = styled.div`
 	display: flex;
 	min-width: 0;
@@ -360,7 +374,7 @@ const InlineSearchInput = styled(InputField)`
 	&& {
 		width: min(100%, 18rem);
 		min-height: 2rem;
-		flex: 0 1 18rem;
+
 		background: rgb(35 61 77 / 0.07);
 		border-color: rgb(35 61 77 / 0.18);
 		font-size: 0.88rem;
@@ -370,6 +384,10 @@ const InlineSearchInput = styled(InputField)`
 			border-color: #da8e5b;
 			background: rgb(35 61 77 / 0.07);
 		}
+	}
+
+	@media (max-width: 42rem) {
+		min-height: 1rem;
 	}
 `;
 
@@ -381,6 +399,12 @@ const GenrePicker = styled.div`
 	border: 0.0625rem solid rgb(186 183 180 / 0.5);
 	border-radius: 0.5rem;
 	padding: 0.65rem 0.65rem 0.9rem;
+
+	@media (max-width: 42rem) {
+		width: 92vw;
+		max-width: 92vw;
+		align-self: center;
+	}
 `;
 
 const GroupsRail = styled.div`
@@ -503,7 +527,7 @@ const ToggleRecommendationsButton = styled.button`
 const RecommendationPillsWrap = styled(GenrePillsWrap)`
 	flex-wrap: nowrap;
 	overflow-x: auto;
-	padding-bottom: 0.35rem;
+	padding: 0.15rem 0 0.7rem;
 	scrollbar-width: thin;
 	scrollbar-color: rgb(218 142 91 / 0.42) transparent;
 

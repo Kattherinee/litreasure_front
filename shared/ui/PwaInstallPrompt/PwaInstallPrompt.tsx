@@ -12,8 +12,10 @@ type BeforeInstallPromptEvent = Event & {
 
 const AUTO_PROMPT_SEEN_STORAGE_KEY = "litreasure:pwa-install-auto-prompt-seen";
 export const OPEN_PWA_INSTALL_PROMPT_EVENT = "litreasure:open-pwa-install-prompt";
+export const PWA_INSTALL_PROMPT_SEEN_EVENT =
+	"litreasure:pwa-install-prompt-seen";
 
-const isIosDevice = () => {
+export const isIosDevice = () => {
 	if (typeof window === "undefined") {
 		return false;
 	}
@@ -26,7 +28,7 @@ const isIosDevice = () => {
 	);
 };
 
-const isSafariBrowser = () => {
+export const isSafariBrowser = () => {
 	if (typeof window === "undefined") {
 		return false;
 	}
@@ -36,7 +38,7 @@ const isSafariBrowser = () => {
 	return /Safari/i.test(userAgent) && !/CriOS|FxiOS|EdgiOS|OPiOS/i.test(userAgent);
 };
 
-const isStandaloneMode = () => {
+export const isStandaloneMode = () => {
 	if (typeof window === "undefined") {
 		return false;
 	}
@@ -51,7 +53,7 @@ const isStandaloneMode = () => {
 	);
 };
 
-const hasSeenAutoPrompt = () => {
+export const hasSeenAutoPrompt = () => {
 	if (typeof window === "undefined") {
 		return false;
 	}
@@ -65,6 +67,23 @@ const setHasSeenAutoPrompt = () => {
 	}
 
 	window.localStorage.setItem(AUTO_PROMPT_SEEN_STORAGE_KEY, "1");
+	window.dispatchEvent(new Event(PWA_INSTALL_PROMPT_SEEN_EVENT));
+};
+
+export const shouldShowPwaInstallMenuHint = () => {
+	if (typeof window === "undefined") {
+		return false;
+	}
+
+	if (isStandaloneMode()) {
+		return false;
+	}
+
+	if (isIosDevice() && isSafariBrowser()) {
+		return true;
+	}
+
+	return !hasSeenAutoPrompt();
 };
 
 const PwaInstallPrompt = () => {

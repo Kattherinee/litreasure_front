@@ -28,7 +28,11 @@ import { theme } from "@/shared/theme";
 import { BookSearch } from "@/shared/ui/BookSearch";
 import { Button } from "@/shared/ui/Button";
 import { ConfirmModal } from "@/shared/ui/ConfirmModal";
-import { OPEN_PWA_INSTALL_PROMPT_EVENT } from "@/shared/ui/PwaInstallPrompt/PwaInstallPrompt";
+import {
+	OPEN_PWA_INSTALL_PROMPT_EVENT,
+	PWA_INSTALL_PROMPT_SEEN_EVENT,
+	shouldShowPwaInstallMenuHint,
+} from "@/shared/ui/PwaInstallPrompt/PwaInstallPrompt";
 
 const navItems = [
 	{
@@ -92,6 +96,7 @@ const Header = () => {
 	const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const [isStandalonePwa, setIsStandalonePwa] = useState(() => isStandaloneMode());
+	const [showPwaInstallHint, setShowPwaInstallHint] = useState(false);
 	const mobileMenuRef = useRef<HTMLDivElement | null>(null);
 	const session = useAuthStore((state) => state.session);
 	const logout = useAuthStore((state) => state.logout);
@@ -200,6 +205,7 @@ const Header = () => {
 	};
 	const openPwaInstallPrompt = () => {
 		window.dispatchEvent(new Event(OPEN_PWA_INSTALL_PROMPT_EVENT));
+		setShowPwaInstallHint(shouldShowPwaInstallMenuHint());
 		closeProfileMenu();
 		closeMobileMenu();
 	};
@@ -249,12 +255,19 @@ const Header = () => {
 
 		const handleEnvironmentChange = () => {
 			setIsStandalonePwa(isStandaloneMode());
+			setShowPwaInstallHint(shouldShowPwaInstallMenuHint());
 		};
 
+		const handlePromptSeen = () => {
+			setShowPwaInstallHint(shouldShowPwaInstallMenuHint());
+		};
+
+		handleEnvironmentChange();
 		standaloneMediaQuery.addEventListener("change", handleEnvironmentChange);
 		fullscreenMediaQuery.addEventListener("change", handleEnvironmentChange);
 		minimalUiMediaQuery.addEventListener("change", handleEnvironmentChange);
 		window.addEventListener("pageshow", handleEnvironmentChange);
+		window.addEventListener(PWA_INSTALL_PROMPT_SEEN_EVENT, handlePromptSeen);
 
 		return () => {
 			standaloneMediaQuery.removeEventListener(
@@ -270,6 +283,7 @@ const Header = () => {
 				handleEnvironmentChange,
 			);
 			window.removeEventListener("pageshow", handleEnvironmentChange);
+			window.removeEventListener(PWA_INSTALL_PROMPT_SEEN_EVENT, handlePromptSeen);
 		};
 	}, []);
 
@@ -393,7 +407,7 @@ const Header = () => {
 										Profile
 										<ProfileMenuHint>Edit</ProfileMenuHint>
 									</ProfileMenuLink>
-									{!isStandalonePwa ? (
+									{showPwaInstallHint && !isStandalonePwa ? (
 										<InstallPromptMenuButton
 											type="button"
 											onClick={openPwaInstallPrompt}
@@ -505,7 +519,7 @@ const Header = () => {
 										<PersonRoundedIcon aria-hidden="true" />
 										<span>Profile</span>
 									</MobileMenuLink>
-									{!isStandalonePwa ? (
+									{showPwaInstallHint && !isStandalonePwa ? (
 										<InstallPromptMobileAction
 											type="button"
 											onClick={openPwaInstallPrompt}
@@ -536,7 +550,7 @@ const Header = () => {
 										<CollectionsBookmarkRoundedIcon aria-hidden="true" />
 										<span>Collections</span>
 									</MobileMenuLink>
-									{!isStandalonePwa ? (
+									{showPwaInstallHint && !isStandalonePwa ? (
 										<InstallPromptMobileAction
 											type="button"
 											onClick={openPwaInstallPrompt}

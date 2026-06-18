@@ -70,7 +70,8 @@ const Actions = styled.div<{ $hasBackButton: boolean }>`
 	padding-top: 0.5rem;
 
 	@media (max-width: 30rem) {
-		flex-direction: column-reverse;
+		justify-content: ${({ $hasBackButton }) =>
+			$hasBackButton ? "space-between" : "flex-end"};
 	}
 `;
 
@@ -80,6 +81,14 @@ const RightActions = styled.div`
 	gap: 0.75rem;
 `;
 
-const PrimaryButton = styled(Button)``;
+const PrimaryButton = styled(Button)`
+	&& {
+		white-space: nowrap;
+	}
+`;
 
-const SecondaryButton = styled(Button)``;
+const SecondaryButton = styled(Button)`
+	&& {
+		white-space: nowrap;
+	}
+`;

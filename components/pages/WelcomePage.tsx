@@ -98,7 +98,8 @@ const OnboardingForm = styled.form<{ $step: string }>`
 	display: flex;
 	flex-direction: column;
 	gap: 1.25rem;
-	margin-top: ${({ $step }) => ($step === "genres" ? "0.75rem" : "2rem")};
+	margin-top: ${({ $step }) =>
+		$step === "genres" ? "0" : $step === "avatar" ? "0" : "2rem"};
 	min-height: 0;
 `;
 

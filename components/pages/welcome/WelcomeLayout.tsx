@@ -48,15 +48,17 @@ const Page = styled.div<{ $step: IWelcomeStep }>`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 100dvh;
-	overflow: hidden;
+	min-height: 100dvh;
+	overflow-x: hidden;
+	overflow-y: auto;
 	background: ${theme.colors.background};
 
 	@media (max-width: 56rem) {
 		display: block;
-		height: auto;
-		overflow: visible;
-		padding: 2rem 0;
+		min-height: 100dvh;
+		overflow-x: hidden;
+		overflow-y: auto;
+		padding: 1rem 0 2rem;
 	}
 `;
 
@@ -73,7 +75,7 @@ const PageInner = styled.div<{ $step: IWelcomeStep }>`
 			: $step === "avatar"
 				? "minmax(18rem, 25rem) minmax(0, 48rem)"
 				: "minmax(18rem, 25rem) minmax(0, 28rem)"};
-	align-items: center;
+	align-items: ${({ $step }) => ($step === "avatar" ? "start" : "center")};
 	gap: ${({ $step }) =>
 		$step === "genres"
 			? "clamp(1.25rem, 3vw, 2.5rem)"
@@ -85,7 +87,7 @@ const PageInner = styled.div<{ $step: IWelcomeStep }>`
 		width 350ms ease;
 
 	@media (max-width: 64rem) {
-		padding: 2rem 1.5rem;
+		padding: 0.5rem 1.5rem 0rem;
 		gap: 1.5rem;
 	}
 
@@ -173,7 +175,7 @@ const RightPanel = styled.div`
 
 	@media (max-width: 56rem) {
 		min-height: 100dvh;
-		padding: 2rem 1.5rem;
+
 		overflow: visible;
 	}
 `;
@@ -181,10 +183,16 @@ const RightPanel = styled.div`
 const RightInner = styled.div<{ $step: IWelcomeStep }>`
 	display: flex;
 	flex-direction: column;
+	justify-content: ${({ $step }) =>
+		$step === "avatar" ? "flex-start" : "center"};
 	width: 100%;
 	max-width: ${({ $step }) =>
 		$step === "genres" ? "72rem" : $step === "avatar" ? "48rem" : "28rem"};
 	flex: 0 1 auto;
-	min-height: 0;
+	min-height: ${({ $step }) =>
+		$step === "avatar" ? "calc(100dvh - 4rem)" : "0"};
 	transition: max-width 350ms ease;
+	@media (max-width: 56rem) {
+		justify-content: center;
+	}
 `;

@@ -54,7 +54,13 @@ const Header = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 1rem;
-	margin-top: 1rem;
+	margin-top: 0.35rem;
+	margin-bottom: 0.85rem;
+
+	@media (max-width: 56rem) {
+		margin-top: -0.35rem;
+		margin-bottom: 1rem;
+	}
 `;
 
 const Tabs = styled.div`
@@ -62,6 +68,10 @@ const Tabs = styled.div`
 	flex: 1;
 	align-items: flex-start;
 	gap: 0.5rem;
+
+	@media (max-width: 56rem) {
+		min-width: 0;
+	}
 `;
 
 const SkipButton = styled.button`

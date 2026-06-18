@@ -78,11 +78,17 @@ const Overlay = styled.div<{ $zIndex: number }>`
 
 const Dialog = styled.section`
 	width: min(100%, 26rem);
+	max-height: calc(100dvh - 2rem);
 	border: 0.0625rem solid rgb(238 179 141 / 0.62);
 	border-radius: 1rem;
 	background: ${theme.colors.background};
+	overflow-y: auto;
 	padding: 1.5rem;
 	box-shadow: 0 1.25rem 3rem rgb(4 18 26 / 0.18);
+
+	@media (max-width: 30rem) {
+		padding: 1rem;
+	}
 `;
 
 const Title = styled.h2`

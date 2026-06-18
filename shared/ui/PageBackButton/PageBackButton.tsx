@@ -34,7 +34,7 @@ const PageBackButton = () => {
 		};
 	}, []);
 
-	if (pathname === "/") {
+	if (pathname === "/" || pathname === "/welcome") {
 		return null;
 	}
 

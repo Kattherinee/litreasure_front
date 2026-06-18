@@ -315,6 +315,7 @@ const Dialog = styled.section<{ $isRegister: boolean }>`
 	position: relative;
 	display: flex;
 	width: min(100%, 32rem);
+	max-height: calc(100dvh - 2rem);
 	min-height: ${({ $isRegister }) =>
 		$isRegister ? "33.0625rem" : "26.375rem"};
 	flex-direction: column;
@@ -322,6 +323,7 @@ const Dialog = styled.section<{ $isRegister: boolean }>`
 	border: 0.0625rem solid #eeb38d;
 	border-radius: 1rem;
 	background: #e8e2de;
+	overflow-y: auto;
 	padding: 1.5rem;
 	box-shadow: 0 1.25rem 3rem rgb(4 18 26 / 0.16);
 	animation: auth-dialog-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
@@ -344,6 +346,10 @@ const Dialog = styled.section<{ $isRegister: boolean }>`
 	@media (max-width: 48rem) {
 		min-height: auto;
 		padding: 1.5rem;
+	}
+
+	@media (max-width: 30rem) {
+		padding: 1rem;
 	}
 `;
 
@@ -457,6 +463,9 @@ const Intro = styled.div<{ $isRegister: boolean }>`
 		padding 220ms ease;
 
 	@media (max-width: 40rem) {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 0.75rem;
 		padding-inline: 0;
 	}
 `;
@@ -536,6 +545,7 @@ const DragonImage = styled.img<{ $isRegister: boolean }>`
 	@media (max-width: 40rem) {
 		width: 4.75rem;
 		height: 4.75rem;
+		align-self: flex-end;
 	}
 `;
 

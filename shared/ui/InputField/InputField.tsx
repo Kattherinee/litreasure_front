@@ -57,5 +57,6 @@ const StyledInput = styled.input<{ $height?: string; $width?: string }>`
 
 	@media (max-width: 640px) {
 		min-height: ${({ $height }) => $height ?? "3rem"};
+		padding: 0.75vw 3.5vw;
 	}
 `;

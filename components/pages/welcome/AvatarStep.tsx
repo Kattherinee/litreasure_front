@@ -24,6 +24,28 @@ interface IAvatarStepProps {
 
 const AVATAR_SIZE = 512;
 
+const getAvatarUploadErrorMessage = (error: unknown) => {
+	if (!(error instanceof Error) || !error.message.trim()) {
+		return "We couldn't upload your photo. Try another image or choose a dragon avatar instead.";
+	}
+
+	const message = error.message.toLowerCase();
+
+	if (message.includes("authorization")) {
+		return "Your session expired, so the photo upload was cancelled. Sign in again or choose a dragon avatar for now.";
+	}
+
+	if (
+		message.includes("failed to fetch") ||
+		message.includes("network") ||
+		message.includes("load")
+	) {
+		return "The photo upload failed because of a connection issue. Try again in a moment or choose a dragon avatar instead.";
+	}
+
+	return "We couldn't upload your photo. Try another image or choose a dragon avatar instead.";
+};
+
 export const AvatarStep = ({ avatarUrl, onAvatarChange }: IAvatarStepProps) => {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const cropperRef = useRef<CropperRef>(null);
@@ -88,39 +110,26 @@ export const AvatarStep = ({ avatarUrl, onAvatarChange }: IAvatarStepProps) => {
 		try {
 			const blob = await getCroppedAvatarBlob(cropperRef.current);
 			if (uploadedPreviewUrl) URL.revokeObjectURL(uploadedPreviewUrl);
+			const nextPreviewUrl = URL.createObjectURL(blob);
 			setUploadedFile(blob);
-			setUploadedPreviewUrl(URL.createObjectURL(blob));
+			setUploadedPreviewUrl(nextPreviewUrl);
 			setIsCropModalOpen(false);
 			setUploadError("");
-		} catch (error) {
-			setUploadError(
-				error instanceof Error ? error.message : "Could not prepare the image",
-			);
-		}
-	};
-
-	const applyUploadedAvatar = async () => {
-		if (!uploadedFile || !uploadedPreviewUrl) return;
-
-		try {
-			setUploadError("");
 			const response = await uploadImageMutation.mutateAsync({
-				file: uploadedFile,
+				file: blob,
 				purpose: "avatar",
 			});
 			onAvatarChange(response.url);
 			setUploadedFile(null);
-			URL.revokeObjectURL(uploadedPreviewUrl);
+			URL.revokeObjectURL(nextPreviewUrl);
 			setUploadedPreviewUrl("");
 		} catch (error) {
-			setUploadError(
-				error instanceof Error ? error.message : "Could not upload the image",
-			);
+			setUploadError(getAvatarUploadErrorMessage(error));
 		}
 	};
 
 	return (
-		<StepBody>
+		<AvatarStepBody>
 			<StepTitle>Choose an avatar</StepTitle>
 			<StepDescription>
 				You can upload your own photo. Click the circle and adjust the crop.
@@ -148,31 +157,31 @@ export const AvatarStep = ({ avatarUrl, onAvatarChange }: IAvatarStepProps) => {
 					type="file"
 					onChange={handleFileChange}
 				/>
-
 				<Tools>
-					<ToolButton type="button" onClick={openFileDialog}>
-						{previewUrl ? "Change" : "Choose photo"}
+					<ToolButton
+						disabled={uploadImageMutation.isPending}
+						type="button"
+						onClick={openFileDialog}
+					>
+						{uploadImageMutation.isPending
+							? "Uploading..."
+							: previewUrl
+								? "Change"
+								: "Choose photo"}
 					</ToolButton>
 					{previewUrl ? (
-						<ToolButton type="button" onClick={clearAvatar}>
+						<ToolButton
+							disabled={uploadImageMutation.isPending}
+							type="button"
+							onClick={clearAvatar}
+						>
 							Remove
 						</ToolButton>
 					) : null}
-					{uploadedPreviewUrl ? (
-						<PrimaryToolButton
-							disabled={uploadImageMutation.isPending}
-							type="button"
-							onClick={applyUploadedAvatar}
-						>
-							{uploadImageMutation.isPending ? "Uploading..." : "Done"}
-						</PrimaryToolButton>
-					) : null}
 				</Tools>
-				{uploadError ? <UploadError>{uploadError}</UploadError> : null}
-
-				<AvatarChoiceTitle>
-					Or choose your character avatar here
-				</AvatarChoiceTitle>
+				<SectionHint>
+					Upload your photo or pick one of the dragon avatars right away.
+				</SectionHint>
 				<AvatarScrollStrip>
 					{avatars.map((avatar) => {
 						const isSelected =
@@ -191,6 +200,11 @@ export const AvatarStep = ({ avatarUrl, onAvatarChange }: IAvatarStepProps) => {
 						);
 					})}
 				</AvatarScrollStrip>
+				{uploadError ? (
+					<UploadErrorBlock role="alert">
+						<UploadError>{uploadError}</UploadError>
+					</UploadErrorBlock>
+				) : null}
 			</AvatarLayout>
 
 			{typeof document !== "undefined" && uploadedPreviewUrl && isCropModalOpen
@@ -223,7 +237,7 @@ export const AvatarStep = ({ avatarUrl, onAvatarChange }: IAvatarStepProps) => {
 						document.body,
 					)
 				: null}
-		</StepBody>
+		</AvatarStepBody>
 	);
 };
 
@@ -247,12 +261,19 @@ const getCroppedAvatarBlob = async (cropper: CropperRef | null) => {
 	});
 };
 
+const AvatarStepBody = styled(StepBody)`
+	height: 100%;
+`;
+
 const AvatarLayout = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	align-self: stretch;
+	flex: 1 1 auto;
 	gap: 1rem;
-	margin-top: 1.5rem;
+	margin-top: 2rem;
+	min-height: 0;
 `;
 
 const AvatarUpload = styled(MuiAvatar)`
@@ -295,7 +316,7 @@ const HiddenFileInput = styled.input`
 
 const CropperShell = styled.div`
 	width: min(100%, 25rem);
-	height: 20rem;
+	height: clamp(14rem, 48vh, 20rem);
 	overflow: hidden;
 	border: 0.0625rem solid rgb(212 100 28 / 0.18);
 	border-radius: 1rem;
@@ -319,6 +340,8 @@ const CropModalOverlay = styled.div`
 
 const CropModal = styled.section`
 	width: min(100%, 29rem);
+	max-height: calc(100dvh - 2rem);
+	overflow-y: auto;
 	border: 0.0625rem solid #eeb38d;
 	border-radius: 1rem;
 	background: #e8e2de;
@@ -337,6 +360,7 @@ const CropModalTitle = styled.h3`
 const CropModalActions = styled.div`
 	display: flex;
 	justify-content: flex-end;
+	flex-wrap: wrap;
 	gap: 0.75rem;
 	margin-top: 1rem;
 `;
@@ -384,11 +408,17 @@ const UploadError = styled.p`
 	text-align: center;
 `;
 
-const AvatarChoiceTitle = styled.p`
-	margin: 0.35rem 0 -0.25rem;
+const UploadErrorBlock = styled.div`
+	display: grid;
+	justify-items: center;
+	gap: 0.5rem;
+`;
+
+const SectionHint = styled.p`
+	margin: 0;
 	color: ${theme.colors.softForeground};
-	font-size: 0.9rem;
-	line-height: 1.35;
+	font-size: 0.85rem;
+	line-height: 1.4;
 	text-align: center;
 `;
 
@@ -398,9 +428,11 @@ const AvatarScrollStrip = styled.div`
 	justify-content: center;
 	gap: 0.75rem;
 	width: 100%;
-	max-height: 17rem;
+	flex: 1 1 auto;
+	align-content: flex-start;
+	min-height: 0;
 	overflow-y: auto;
-	padding: 0.25rem;
+	padding: 0.25rem 0.25rem 0.6rem;
 
 	&::-webkit-scrollbar {
 		width: 0.25rem;
