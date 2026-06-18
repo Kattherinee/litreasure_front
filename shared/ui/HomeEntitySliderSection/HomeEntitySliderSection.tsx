@@ -1,5 +1,6 @@
 "use client";
 
+import ArrowOutwardRoundedIcon from "@mui/icons-material/ArrowOutwardRounded";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
@@ -200,15 +201,18 @@ const HomeEntitySliderSection = ({
 			) : entity === "authors" ? (
 				<AuthorCarousel
 					authors={items as IAuthorPreview[]}
+					endSlideHref={sectionHref}
 					onControlsChange={handleControlsChange}
 				/>
 			) : entity === "collections" ? (
 				<CollectionCarousel
 					collections={items as ICollectionPreview[]}
+					endSlideHref={sectionHref}
 					onControlsChange={handleControlsChange}
 				/>
 			) : (
 				<SeriesCarousel
+					endSlideHref={sectionHref}
 					onControlsChange={handleControlsChange}
 					series={items as ISeriesPreview[]}
 				/>
@@ -219,9 +223,11 @@ const HomeEntitySliderSection = ({
 
 const AuthorCarousel = ({
 	authors,
+	endSlideHref,
 	onControlsChange,
 }: {
 	authors: IAuthorPreview[];
+	endSlideHref: string;
 	onControlsChange: (controls: IHorizontalCarouselControls) => void;
 }) => {
 	const {
@@ -257,6 +263,17 @@ const AuthorCarousel = ({
 						</AuthorTreasureCard>
 					</CarouselSlide>
 				))}
+				<CarouselSlide>
+					<EndSlideLink href={endSlideHref}>
+						<EndSlideInner>
+							<EndSlideEyebrow>More authors</EndSlideEyebrow>
+							<EndSlideTitle>See all</EndSlideTitle>
+							<EndSlideArrow aria-hidden="true">
+								<ArrowOutwardRoundedIcon />
+							</EndSlideArrow>
+						</EndSlideInner>
+					</EndSlideLink>
+				</CarouselSlide>
 			</CarouselContainer>
 		</CarouselViewport>
 	);
@@ -264,9 +281,11 @@ const AuthorCarousel = ({
 
 const CollectionCarousel = ({
 	collections,
+	endSlideHref,
 	onControlsChange,
 }: {
 	collections: ICollectionPreview[];
+	endSlideHref: string;
 	onControlsChange: (controls: IHorizontalCarouselControls) => void;
 }) => {
 	const {
@@ -303,15 +322,28 @@ const CollectionCarousel = ({
 						</CollectionTreasureCard>
 					</CarouselSlide>
 				))}
+				<CarouselSlide>
+					<EndSlideLink href={endSlideHref}>
+						<EndSlideInner>
+							<EndSlideEyebrow>More collections</EndSlideEyebrow>
+							<EndSlideTitle>See all</EndSlideTitle>
+							<EndSlideArrow aria-hidden="true">
+								<ArrowOutwardRoundedIcon />
+							</EndSlideArrow>
+						</EndSlideInner>
+					</EndSlideLink>
+				</CarouselSlide>
 			</CarouselContainer>
 		</CarouselViewport>
 	);
 };
 
 const SeriesCarousel = ({
+	endSlideHref,
 	series,
 	onControlsChange,
 }: {
+	endSlideHref: string;
 	series: ISeriesPreview[];
 	onControlsChange: (controls: IHorizontalCarouselControls) => void;
 }) => {
@@ -336,6 +368,17 @@ const SeriesCarousel = ({
 						<SeriesSliderCard seriesItem={seriesItem} />
 					</CarouselSlide>
 				))}
+				<CarouselSlide>
+					<EndSlideLink href={endSlideHref}>
+						<EndSlideInner>
+							<EndSlideEyebrow>More series</EndSlideEyebrow>
+							<EndSlideTitle>See all</EndSlideTitle>
+							<EndSlideArrow aria-hidden="true">
+								<ArrowOutwardRoundedIcon />
+							</EndSlideArrow>
+						</EndSlideInner>
+					</EndSlideLink>
+				</CarouselSlide>
 			</CarouselContainer>
 		</CarouselViewport>
 	);
@@ -461,4 +504,83 @@ const CollectionCover = styled.div<{ $coverUrl?: string }>`
 		linear-gradient(rgb(4 18 26 / 0.08), rgb(4 18 26 / 0.08)),
 		url("${({ $coverUrl }) => $coverUrl || "/images/book-placeholder.svg"}")
 			center / cover;
+`;
+
+const EndSlideLink = styled(Link)`
+	display: flex;
+	width: 10.5rem;
+	min-width: 10.5rem;
+	min-height: 7.8rem;
+	align-items: center;
+	justify-content: center;
+	margin-block: -0.45rem;
+	color: ${theme.colors.foreground};
+	text-decoration: none;
+	transition:
+		transform 180ms ease,
+		color 180ms ease;
+
+	&:focus-visible {
+		outline: 0.1875rem solid ${theme.colors.orangeDark};
+		outline-offset: 0.2rem;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		&:hover,
+		&:focus-visible {
+			transform: translateY(-0.32rem);
+			color: ${theme.colors.orangeDark};
+		}
+	}
+
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		width: 8.8rem;
+		min-width: 8.8rem;
+		min-height: 7rem;
+	}
+`;
+
+const EndSlideInner = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.85rem;
+	width: fit-content;
+	text-align: center;
+	padding: 1.2rem 0.5rem;
+`;
+
+const EndSlideEyebrow = styled.span`
+	color: ${theme.colors.lightText};
+	font-family: ${theme.fonts.sans};
+	font-size: 0.72rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+`;
+
+const EndSlideTitle = styled.span`
+	display: block;
+	color: inherit;
+	font-family: ${theme.fonts.serif};
+	font-size: 1.2rem;
+	font-weight: 600;
+	line-height: 1.05;
+`;
+
+const EndSlideArrow = styled.span`
+	display: inline-flex;
+	width: 2.25rem;
+	height: 2.25rem;
+	align-items: center;
+	justify-content: center;
+	border-radius: 999px;
+	background: rgb(218 142 91 / 0.12);
+	color: ${theme.colors.orangeDark};
+
+	& svg {
+		width: 1.2rem;
+		height: 1.2rem;
+	}
 `;

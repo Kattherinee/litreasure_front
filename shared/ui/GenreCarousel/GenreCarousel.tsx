@@ -98,7 +98,8 @@ const Viewport = styled.div`
 const Container = styled.div`
 	display: flex;
 	gap: 0.5rem;
-	padding-inline: var(--content-side-space);
+	padding-left: var(--content-side-space);
+	padding-right: 0;
 	touch-action: pan-y pinch-zoom;
 `;
 

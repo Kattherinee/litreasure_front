@@ -8,8 +8,8 @@ const WHEEL_SENSITIVITY = -0.91;
 const EMBLA_WHEEL_DURATION = 15;
 const EMBLA_WHEEL_FRICTION = 0.68;
 const SCROLL_EDGE_THRESHOLD = 0.002;
-const HORIZONTAL_GESTURE_RATIO = 1.15;
-const MIN_HORIZONTAL_DELTA = 4;
+const HORIZONTAL_GESTURE_RATIO = 1.8;
+const MIN_HORIZONTAL_DELTA = 10;
 
 export interface IHorizontalCarouselControls {
 	canScrollNext: boolean;
@@ -47,13 +47,41 @@ export const useHorizontalCarousel = () => {
 		setCanScrollNext(hasCarouselScroll && progress < 1 - SCROLL_EDGE_THRESHOLD);
 	}, []);
 
-	const scrollNext = useCallback(() => {
-		emblaApi?.scrollNext();
+	const getPageStep = useCallback(() => {
+		if (!emblaApi) {
+			return 1;
+		}
+
+		const visibleCount = emblaApi.slidesInView().length;
+
+		return Math.max(1, visibleCount - 1);
 	}, [emblaApi]);
 
+	const scrollNext = useCallback(() => {
+		if (!emblaApi) {
+			return;
+		}
+
+		const pageStep = getPageStep();
+		const lastSnapIndex = Math.max(0, emblaApi.scrollSnapList().length - 1);
+		const targetIndex = Math.min(
+			lastSnapIndex,
+			emblaApi.selectedScrollSnap() + pageStep,
+		);
+
+		emblaApi.scrollTo(targetIndex);
+	}, [emblaApi, getPageStep]);
+
 	const scrollPrev = useCallback(() => {
-		emblaApi?.scrollPrev();
-	}, [emblaApi]);
+		if (!emblaApi) {
+			return;
+		}
+
+		const pageStep = getPageStep();
+		const targetIndex = Math.max(0, emblaApi.selectedScrollSnap() - pageStep);
+
+		emblaApi.scrollTo(targetIndex);
+	}, [emblaApi, getPageStep]);
 
 	const setViewportRef = useCallback(
 		(node: HTMLDivElement | null) => {
@@ -76,9 +104,14 @@ export const useHorizontalCarousel = () => {
 			const absDeltaX = Math.abs(event.deltaX);
 			const absDeltaY = Math.abs(event.deltaY);
 			const hasStrongHorizontalIntent =
-				absDeltaX > MIN_HORIZONTAL_DELTA &&
+				absDeltaX >= MIN_HORIZONTAL_DELTA &&
 				absDeltaX > absDeltaY * HORIZONTAL_GESTURE_RATIO;
-			const isHorizontalGesture = hasStrongHorizontalIntent || event.shiftKey;
+			const isHorizontalGesture = event.shiftKey || hasStrongHorizontalIntent;
+
+			if (!isHorizontalGesture) {
+				return;
+			}
+
 			const rawDelta = isHorizontalGesture
 				? absDeltaX > 0
 					? event.deltaX

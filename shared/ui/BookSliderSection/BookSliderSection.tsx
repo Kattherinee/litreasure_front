@@ -139,6 +139,8 @@ const BookSliderSection = ({
 			) : (
 				<BookCarousel
 					books={books}
+					endSlideHref={sectionHref}
+					endSlideLabel="See all"
 					size="compact"
 					onControlsChange={(controls) => {
 						setCarouselControls((currentControls) => {

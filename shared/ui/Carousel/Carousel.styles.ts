@@ -11,7 +11,8 @@ export const CarouselViewport = styled.div<{
 	width: ${({ $bleed }) => ($bleed ? "100vw" : "100%")};
 	margin-left: ${({ $bleed }) =>
 		$bleed ? "calc(var(--content-side-space) * -1)" : "0"};
-	overflow: ${({ $hasOverflow }) => ($hasOverflow ? "hidden" : "visible")};
+	overflow-x: ${({ $hasOverflow }) => ($hasOverflow ? "hidden" : "visible")};
+	overflow-y: visible;
 	overscroll-behavior-x: contain;
 	overscroll-behavior-y: auto;
 	padding-block: 0.125rem;
@@ -26,6 +27,7 @@ export const CarouselContainer = styled.div<{ $bleed?: boolean }>`
 	height: auto;
 	padding-left: ${({ $bleed }) =>
 		$bleed ? "var(--content-side-space)" : "0.35rem"};
+	padding-right: ${({ $bleed }) => ($bleed ? "0" : "0.35rem")};
 	padding-block: ${({ $bleed }) => ($bleed ? "0" : "0.35rem")};
 	touch-action: pan-y pinch-zoom;
 `;
