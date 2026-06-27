@@ -30,6 +30,7 @@ import { Button } from "@/shared/ui/Button";
 import { ConfirmModal } from "@/shared/ui/ConfirmModal";
 import {
 	OPEN_PWA_INSTALL_PROMPT_EVENT,
+	PWA_INSTALL_PROMPT_AVAILABLE_EVENT,
 	PWA_INSTALL_PROMPT_SEEN_EVENT,
 	shouldShowPwaInstallMenuHint,
 } from "@/shared/ui/PwaInstallPrompt/PwaInstallPrompt";
@@ -262,12 +263,20 @@ const Header = () => {
 			setShowPwaInstallHint(shouldShowPwaInstallMenuHint());
 		};
 
+		const handlePromptAvailable = () => {
+			setShowPwaInstallHint(shouldShowPwaInstallMenuHint());
+		};
+
 		handleEnvironmentChange();
 		standaloneMediaQuery.addEventListener("change", handleEnvironmentChange);
 		fullscreenMediaQuery.addEventListener("change", handleEnvironmentChange);
 		minimalUiMediaQuery.addEventListener("change", handleEnvironmentChange);
 		window.addEventListener("pageshow", handleEnvironmentChange);
 		window.addEventListener(PWA_INSTALL_PROMPT_SEEN_EVENT, handlePromptSeen);
+		window.addEventListener(
+			PWA_INSTALL_PROMPT_AVAILABLE_EVENT,
+			handlePromptAvailable,
+		);
 
 		return () => {
 			standaloneMediaQuery.removeEventListener(
@@ -284,6 +293,10 @@ const Header = () => {
 			);
 			window.removeEventListener("pageshow", handleEnvironmentChange);
 			window.removeEventListener(PWA_INSTALL_PROMPT_SEEN_EVENT, handlePromptSeen);
+			window.removeEventListener(
+				PWA_INSTALL_PROMPT_AVAILABLE_EVENT,
+				handlePromptAvailable,
+			);
 		};
 	}, []);
 

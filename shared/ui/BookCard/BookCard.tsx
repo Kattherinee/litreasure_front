@@ -11,8 +11,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
-import type { KeyboardEvent, MouseEvent, SyntheticEvent } from "react";
-import { useEffect, useRef, useState } from "react";
+import type { KeyboardEvent, MouseEvent } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import type { IAuthorShort, IBookSeriesRelationType } from "@/shared/api/books";
@@ -128,7 +128,6 @@ const BookCard = ({
 		seriesTotal: seriesTotal ?? seriesBookCount,
 	});
 	const coverSrc = coverUrl?.trim() ? coverUrl : "/images/book-placeholder.svg";
-	const [coverWidth, setCoverWidth] = useState<number | null>(null);
 	const [loadedCoverSrc, setLoadedCoverSrc] = useState("");
 	const router = useRouter();
 	const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -294,19 +293,6 @@ const BookCard = ({
 		event.stopPropagation();
 	};
 
-	const handleCoverLoad = (event: SyntheticEvent<HTMLImageElement>) => {
-		const image = event.currentTarget;
-
-		if (!image.naturalWidth || !image.naturalHeight) {
-			return;
-		}
-
-		setCoverWidth(
-			(image.naturalWidth / image.naturalHeight) * image.clientHeight,
-		);
-		setLoadedCoverSrc(coverSrc);
-	};
-
 	return (
 		<BookCardWrapper
 			$isActive={isActive}
@@ -318,7 +304,7 @@ const BookCard = ({
 			onClick={openBookPage}
 			onKeyDown={handleCardKeyDown}
 		>
-			<BookCover $coverWidth={coverWidth} $size={size}>
+			<BookCover $size={size}>
 				{isCoverLoaded ? null : <CoverPlaceholder aria-hidden="true" />}
 				{isBookTracked && showStatusBadge ? (
 					<StatusBadge
@@ -342,7 +328,7 @@ const BookCard = ({
 					alt={`Cover of ${title}`}
 					decoding="async"
 					loading="lazy"
-					onLoad={handleCoverLoad}
+					onLoad={() => setLoadedCoverSrc(coverSrc)}
 				/>
 
 				<CardLibraryAction ref={actionRef} $isTracked={isBookTracked}>
@@ -413,7 +399,7 @@ const BookCard = ({
 				{addStatus ? <AddStatus>{addStatus}</AddStatus> : null}
 			</BookCover>
 
-			<BookMeta $coverWidth={coverWidth} $size={size}>
+			<BookMeta $size={size}>
 				<BookTitle $size={size}>
 					{seriesBadgeLabel ? (
 						<SeriesTitlePrefix>{seriesBadgeLabel} · </SeriesTitlePrefix>
@@ -437,7 +423,9 @@ const BookCard = ({
 	);
 };
 
-export default BookCard;
+const MemoizedBookCard = memo(BookCard);
+
+export default MemoizedBookCard;
 
 const getSeriesBadgeLabel = ({
 	orderInSeries,
@@ -514,14 +502,12 @@ const BookCardWrapper = styled.article<{
 
 const BookCover = styled.div<{
 	$size: IBookCardSize;
-	$coverWidth: number | null;
 }>`
 	position: relative;
 	z-index: 2;
 	flex: 0 0 auto;
 	overflow: hidden;
-	width: ${({ $size, $coverWidth }) =>
-		$coverWidth ? `${$coverWidth}px` : getFallbackCoverWidthBySize($size)};
+	width: ${({ $size }) => getFallbackCoverWidthBySize($size)};
 	height: ${({ $size }) =>
 		$size === "tiny"
 			? "8.6rem"
@@ -585,7 +571,6 @@ const StatusBadge = styled.span<{ $color: string }>`
 `;
 
 const BookMeta = styled.div<{
-	$coverWidth: number | null;
 	$size: IBookCardSize;
 }>`
 	position: relative;
@@ -593,8 +578,7 @@ const BookMeta = styled.div<{
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-	width: ${({ $size, $coverWidth }) =>
-		$coverWidth ? `${$coverWidth}px` : getFallbackCoverWidthBySize($size)};
+	width: ${({ $size }) => getFallbackCoverWidthBySize($size)};
 	height: ${({ $size }) =>
 		$size === "tiny" ? "2.25rem" : $size === "compact" ? "2.8rem" : "3.2rem"};
 

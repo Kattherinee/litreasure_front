@@ -79,8 +79,8 @@ const BookCarousel = ({
 				ref={setViewportRef}
 			>
 				<CarouselContainer $bleed={bleed} ref={setContainerRef}>
-					{books.map((book, index) => (
-						<CarouselSlide key={`${book.id}-${index}`}>
+					{books.map((book) => (
+						<CarouselSlide key={book.id}>
 							<BookCard
 								book={book}
 								isActive={book.id === activeBookId}

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 export const useLazyLoadTrigger = (
 	isLazy = false,
-	rootMargin = "900px 0px",
+	rootMargin = "0px",
 ) => {
 	const containerRef = useRef<HTMLElement | null>(null);
 	const [isTriggered, setIsTriggered] = useState(!isLazy);

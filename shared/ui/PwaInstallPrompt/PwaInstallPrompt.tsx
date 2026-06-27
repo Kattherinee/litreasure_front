@@ -11,9 +11,33 @@ type BeforeInstallPromptEvent = Event & {
 };
 
 const AUTO_PROMPT_SEEN_STORAGE_KEY = "litreasure:pwa-install-auto-prompt-seen";
+const INSTALL_PROMPT_SUPPORTED_STORAGE_KEY =
+	"litreasure:pwa-install-prompt-supported";
 export const OPEN_PWA_INSTALL_PROMPT_EVENT = "litreasure:open-pwa-install-prompt";
+export const PWA_INSTALL_PROMPT_AVAILABLE_EVENT =
+	"litreasure:pwa-install-prompt-available";
 export const PWA_INSTALL_PROMPT_SEEN_EVENT =
 	"litreasure:pwa-install-prompt-seen";
+
+export const isAndroidDevice = () => {
+	if (typeof window === "undefined") {
+		return false;
+	}
+
+	const { userAgent, platform } = window.navigator;
+
+	return /Android/i.test(userAgent) || /Android/i.test(platform);
+};
+
+export const isWindowsDevice = () => {
+	if (typeof window === "undefined") {
+		return false;
+	}
+
+	const { platform, userAgent } = window.navigator;
+
+	return platform.startsWith("Win") || /Windows/i.test(userAgent);
+};
 
 export const isIosDevice = () => {
 	if (typeof window === "undefined") {
@@ -70,6 +94,23 @@ const setHasSeenAutoPrompt = () => {
 	window.dispatchEvent(new Event(PWA_INSTALL_PROMPT_SEEN_EVENT));
 };
 
+const setInstallPromptSupported = () => {
+	if (typeof window === "undefined") {
+		return;
+	}
+
+	window.localStorage.setItem(INSTALL_PROMPT_SUPPORTED_STORAGE_KEY, "1");
+	window.dispatchEvent(new Event(PWA_INSTALL_PROMPT_AVAILABLE_EVENT));
+};
+
+export const hasInstallPromptSupport = () => {
+	if (typeof window === "undefined") {
+		return false;
+	}
+
+	return window.localStorage.getItem(INSTALL_PROMPT_SUPPORTED_STORAGE_KEY) === "1";
+};
+
 export const shouldShowPwaInstallMenuHint = () => {
 	if (typeof window === "undefined") {
 		return false;
@@ -83,7 +124,7 @@ export const shouldShowPwaInstallMenuHint = () => {
 		return true;
 	}
 
-	return !hasSeenAutoPrompt();
+	return hasInstallPromptSupport();
 };
 
 const PwaInstallPrompt = () => {
@@ -95,10 +136,13 @@ const PwaInstallPrompt = () => {
 	const [isResolved, setIsResolved] = useState(false);
 	const [isVisible, setIsVisible] = useState(false);
 
-	const showAndroidPrompt = Boolean(deferredPrompt);
+	const showInstallPrompt = Boolean(deferredPrompt);
 	const showIosPrompt =
-		isIosDeviceState && isSafariBrowserState && !isInstalled && !showAndroidPrompt;
-	const canShowPrompt = showAndroidPrompt || showIosPrompt;
+		isIosDeviceState &&
+		isSafariBrowserState &&
+		!isInstalled &&
+		!showInstallPrompt;
+	const canShowPrompt = showInstallPrompt || showIosPrompt;
 
 	useEffect(() => {
 		if (typeof window === "undefined") {
@@ -117,6 +161,7 @@ const PwaInstallPrompt = () => {
 
 		const handleBeforeInstallPrompt = (event: Event) => {
 			event.preventDefault();
+			setInstallPromptSupported();
 			setDeferredPrompt(event as BeforeInstallPromptEvent);
 		};
 
@@ -168,8 +213,12 @@ const PwaInstallPrompt = () => {
 			return;
 		}
 
-		setHasSeenAutoPrompt();
-		setIsVisible(true);
+		const frame = window.requestAnimationFrame(() => {
+			setHasSeenAutoPrompt();
+			setIsVisible(true);
+		});
+
+		return () => window.cancelAnimationFrame(frame);
 	}, [canShowPrompt, isInstalled, isResolved]);
 
 	if (!isResolved || isInstalled || !canShowPrompt || !isVisible) {
@@ -210,12 +259,12 @@ const PwaInstallPrompt = () => {
 				</CloseButton>
 				<Eyebrow>App install</Eyebrow>
 				<Title>
-					{showAndroidPrompt
+					{showInstallPrompt
 						? "Install Litreasure for quicker access"
 						: "Add Litreasure to your Home Screen"}
 				</Title>
 				<Description>
-					{showAndroidPrompt ? (
+					{showInstallPrompt ? (
 						<>Open Litreasure like a native app and keep it one tap away.</>
 					) : (
 						<>
@@ -224,7 +273,7 @@ const PwaInstallPrompt = () => {
 						</>
 					)}
 				</Description>
-				{showAndroidPrompt ? (
+				{showInstallPrompt ? (
 					<PrimaryButton type="button" onClick={handleInstall}>
 						Install app
 					</PrimaryButton>
