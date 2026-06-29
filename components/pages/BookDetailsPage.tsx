@@ -257,6 +257,9 @@ const SectionHeader = styled.div`
 	justify-content: space-between;
 	gap: 1.25rem;
 	margin-bottom: 0.75rem;
+	@media (max-width: 47.9375rem) {
+		margin-bottom: 3.75rem;
+	}
 `;
 
 const SectionTitle = styled.h2`

@@ -118,7 +118,7 @@ const Content = styled.section`
 	max-width: ${theme.layout.collectionsPageMaxWidth};
 
 	@media (max-width: ${theme.rubberSize.tablet}) {
-		margin-top: 2rem;
+		margin-top: 3rem;
 		max-width: 95vw;
 	}
 `;
