@@ -510,14 +510,16 @@ const BookDetailHero = ({ book, onAuthRequired }: IBookDetailHeroProps) => {
 				>
 					<AutoStoriesOutlinedIcon aria-hidden="true" />
 				</RoundAction>
-				<PaperNoteToggleAction
-					aria-expanded={isPaperNoteOpen}
-					aria-label="Paper note"
-					type="button"
-					onClick={togglePaperNotePanel}
-				>
-					<EditNoteOutlinedIcon aria-hidden="true" />
-				</PaperNoteToggleAction>
+				{isBookTracked ? (
+					<PaperNoteToggleAction
+						aria-expanded={isPaperNoteOpen}
+						aria-label="Paper note"
+						type="button"
+						onClick={togglePaperNotePanel}
+					>
+						<EditNoteOutlinedIcon aria-hidden="true" />
+					</PaperNoteToggleAction>
+				) : null}
 				<MoreActionWrap
 					onMouseEnter={cancelCloseMoreMenu}
 					onMouseLeave={scheduleCloseMoreMenu}
@@ -534,12 +536,6 @@ const BookDetailHero = ({ book, onAuthRequired }: IBookDetailHeroProps) => {
 						aria-haspopup="menu"
 						type="button"
 						aria-label="More actions"
-						onMouseEnter={() => {
-							setIsStatusMenuOpen(false);
-							cancelCloseMoreMenu();
-							setIsMoreMenuOpen(true);
-							setIsNoteEditorOpen(false);
-						}}
 						onClick={() => {
 							setIsStatusMenuOpen(false);
 							setIsMoreMenuOpen((current) => !current);
@@ -555,8 +551,6 @@ const BookDetailHero = ({ book, onAuthRequired }: IBookDetailHeroProps) => {
 								aria-expanded={isPaperMenuOpen}
 								role="menuitem"
 								type="button"
-								onMouseEnter={() => setIsPaperMenuOpen(true)}
-								onMouseOverCapture={() => setIsNoteEditorOpen(false)}
 								onClick={() => setIsPaperMenuOpen((current) => !current)}
 							>
 								<span>Paper book</span>
@@ -969,10 +963,6 @@ const PaperNoteToggleAction = styled.button`
 
 	margin-left: 0.45rem;
 
-	@media (min-width: 48rem) {
-		display: none;
-	}
-
 	@media (max-width: 74.9375rem) {
 		width: 2.35rem;
 		height: 2.35rem;
@@ -990,6 +980,17 @@ const PaperNoteToggleAction = styled.button`
 			color: ${theme.colors.invertedText};
 			outline: none;
 			transform: translateY(-0.0625rem);
+		}
+	}
+	@media (min-width: 48rem) {
+		${finePointer} {
+			&:hover,
+			&:focus-visible {
+				background: ${theme.colors.surface};
+				color: ${theme.colors.darkerOrangeLight};
+				outline: unset;
+				transform: unset;
+			}
 		}
 	}
 `;
