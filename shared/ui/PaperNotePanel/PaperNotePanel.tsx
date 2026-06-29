@@ -73,6 +73,7 @@ const PaperNotePanel = ({
 				{isInlineEditing ? (
 					<>
 						<InlineField
+							autoFocus
 							placeholder="My paper note"
 							value={value}
 							onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
@@ -85,7 +86,7 @@ const PaperNotePanel = ({
 							</InlineButton>
 							<InlineButton
 								$primary
-								disabled={isActionPending}
+								// disabled={isActionPending}
 								type="button"
 								onClick={onSaveInlineEdit}
 							>
