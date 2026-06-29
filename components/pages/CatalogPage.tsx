@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -38,7 +37,7 @@ const CatalogPage = ({ slug }: ICatalogPageProps) => {
 		isError,
 		isLoading,
 	} = useBookCardsQuery(
-		{ limit: 27, page, sort },
+		{ limit: 40, page, sort },
 		{ enabled: !isForYouCatalog },
 	);
 
@@ -117,6 +116,11 @@ const Page = styled.div`
 const Content = styled.section`
 	margin: 0 auto;
 	max-width: ${theme.layout.collectionsPageMaxWidth};
+
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		margin-top: 2rem;
+		max-width: 95vw;
+	}
 `;
 
 const Hero = styled.section``;
@@ -125,18 +129,6 @@ const HeroInner = styled.div`
 	width: min(95vw, ${theme.layout.collectionsPageMaxWidth});
 	margin: 0 auto;
 	padding: 4vw 0 0;
-`;
-
-const BackLink = styled(Link)`
-	display: inline-flex;
-	margin-bottom: 1.5rem;
-	color: ${theme.colors.orangeDark};
-	font-size: 0.9375rem;
-	text-decoration: none;
-
-	&:hover {
-		text-decoration: underline;
-	}
 `;
 
 const Title = styled.h1`

@@ -22,6 +22,8 @@ export const userBooksQueryKeys = {
 	statusCounts: () => ["user-books", "status-counts"] as const,
 };
 
+const recomendationsForYouBooksQueryKey = ["recomendations", "for-you-books"] as const;
+
 export const useUserBooksQuery = (
 	params: IUserBooksParams = {},
 	options?: { enabled?: boolean },
@@ -65,6 +67,9 @@ export const useUpdateBookTrackingMutation = () => {
 			queryClient.invalidateQueries({ queryKey: booksQueryKeys.byId(bookId) });
 			queryClient.invalidateQueries({ queryKey: userBooksQueryKeys.all });
 			queryClient.setQueryData(userBooksQueryKeys.byBookId(bookId), data);
+			queryClient.invalidateQueries({
+				queryKey: recomendationsForYouBooksQueryKey,
+			});
 		},
 	});
 };
@@ -78,6 +83,9 @@ export const useDeleteBookTrackingMutation = () => {
 			queryClient.invalidateQueries({ queryKey: booksQueryKeys.byId(bookId) });
 			queryClient.invalidateQueries({ queryKey: userBooksQueryKeys.all });
 			queryClient.removeQueries({ queryKey: userBooksQueryKeys.byBookId(bookId) });
+			queryClient.invalidateQueries({
+				queryKey: recomendationsForYouBooksQueryKey,
+			});
 		},
 	});
 };

@@ -28,6 +28,11 @@ export const booksQueryKeys = {
 	collections: (id: string) => ["books", id, "collections"] as const,
 };
 
+const recomendationsForYouBooksQueryKey = [
+	"recomendations",
+	"for-you-books",
+] as const;
+
 export const useBooksQuery = () =>
 	useQuery({ queryFn: getBooks, queryKey: booksQueryKeys.all });
 
@@ -44,9 +49,13 @@ export const useBookCardsQuery = (
 		queryFn: () => getBookCards({ params }),
 		queryKey: booksQueryKeys.cards(params, viewerKey),
 		gcTime:
-			params.genre || params.genreIds?.length ? 7 * 24 * 60 * 60_000 : undefined,
+			params.genre || params.genreIds?.length
+				? 7 * 24 * 60 * 60_000
+				: undefined,
 		staleTime:
-			params.genre || params.genreIds?.length ? 7 * 24 * 60 * 60_000 : undefined,
+			params.genre || params.genreIds?.length
+				? 7 * 24 * 60 * 60_000
+				: undefined,
 	});
 };
 
@@ -63,6 +72,9 @@ export const useCreateBookMutation = () => {
 		mutationFn: (payload: ICreateBookPayload) => createBook(payload),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: booksQueryKeys.all });
+			queryClient.invalidateQueries({
+				queryKey: recomendationsForYouBooksQueryKey,
+			});
 		},
 	});
 };
@@ -80,6 +92,9 @@ export const useUpdateBookMutation = () => {
 		onSuccess: (_data, { id }) => {
 			queryClient.invalidateQueries({ queryKey: booksQueryKeys.byId(id) });
 			queryClient.invalidateQueries({ queryKey: booksQueryKeys.all });
+			queryClient.invalidateQueries({
+				queryKey: recomendationsForYouBooksQueryKey,
+			});
 		},
 	});
 };
@@ -90,6 +105,9 @@ export const useDeleteBookMutation = () => {
 		mutationFn: (id: string) => deleteBook(id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: booksQueryKeys.all });
+			queryClient.invalidateQueries({
+				queryKey: recomendationsForYouBooksQueryKey,
+			});
 		},
 	});
 };
@@ -122,6 +140,9 @@ export const useRateBookMutation = () => {
 				};
 			});
 			queryClient.invalidateQueries({ queryKey: ["books", "cards"] });
+			queryClient.invalidateQueries({
+				queryKey: recomendationsForYouBooksQueryKey,
+			});
 		},
 	});
 };

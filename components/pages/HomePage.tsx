@@ -15,6 +15,7 @@ const normalize = (value?: string) => value?.toLowerCase().trim() ?? "";
 
 const ABOVE_FOLD_LAZY_ROOT_MARGIN = "-180px 0px 0px 0px";
 const BELOW_FOLD_LAZY_ROOT_MARGIN = "-420px 0px 0px 0px";
+const BOOK_SECTION_LIMIT = 20;
 
 const isForYouSection = (section: IHomeSection) => {
 	const key = normalize(section.key);
@@ -121,19 +122,20 @@ const HomePage = () => {
 					<GenreCarousel />
 					{isAuthenticated ? (
 						forYouSection ? (
-							<BookSliderSection
-								key={forYouSection.key}
-								source="for-you"
-								title="You Might Like"
-								{...forYouSection.query}
-							/>
-						) : (
-							<BookSliderSection
-								source="for-you"
-								title="You Might Like"
-								limit={20}
-							/>
-						)
+						<BookSliderSection
+							key={forYouSection.key}
+							source="for-you"
+							title="You Might Like"
+							limit={BOOK_SECTION_LIMIT}
+							{...forYouSection.query}
+						/>
+					) : (
+						<BookSliderSection
+							source="for-you"
+							title="You Might Like"
+							limit={BOOK_SECTION_LIMIT}
+						/>
+					)
 					) : newestBookSection ? (
 						<BookSliderSection
 							key={newestBookSection.key}
@@ -142,7 +144,11 @@ const HomePage = () => {
 							{...newestBookSection.query}
 						/>
 					) : (
-						<BookSliderSection title="New releases" sort="newest" limit={20} />
+						<BookSliderSection
+							title="New releases"
+							sort="newest"
+							limit={BOOK_SECTION_LIMIT}
+						/>
 					)}
 					<BookOfTheWeekSlider
 						lazy
@@ -250,28 +256,37 @@ const HomePage = () => {
 							source="for-you"
 							title="You Might Like"
 							sort="newest"
-							limit={20}
+							limit={BOOK_SECTION_LIMIT}
 						/>
 					) : (
-						<BookSliderSection title="New releases" sort="newest" limit={20} />
+						<BookSliderSection
+							title="New releases"
+							sort="newest"
+							limit={BOOK_SECTION_LIMIT}
+						/>
 					)}
 					<BookOfTheWeekSlider />
 					{isAuthenticated ? (
-						<BookSliderSection lazy title="Popular" sort="popular" limit={20} />
+						<BookSliderSection
+							lazy
+							title="Popular"
+							sort="popular"
+							limit={BOOK_SECTION_LIMIT}
+						/>
 					) : null}
 					<BookSliderSection
 						lazy
 						title="Young Adult Fiction"
 						sort="newest"
 						genre="young_adult_fiction"
-						limit={20}
+						limit={BOOK_SECTION_LIMIT}
 					/>
 					<BookSliderSection
 						lazy
 						title="Fantasy"
 						sort="newest"
 						genre="fantasy"
-						limit={20}
+						limit={BOOK_SECTION_LIMIT}
 					/>
 				</>
 			)}

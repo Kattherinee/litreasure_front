@@ -94,12 +94,16 @@ export type IBookCardSize = "default" | "compact" | "tiny";
 interface IBookCardProps {
 	book: IBookCardData;
 	isActive?: boolean;
+	coverFetchPriority?: "auto" | "high";
+	coverLoading?: "eager" | "lazy";
 	showStatusBadge?: boolean;
 	size?: IBookCardSize;
 }
 
 const BookCard = ({
 	book,
+	coverFetchPriority = "auto",
+	coverLoading = "lazy",
 	isActive = false,
 	showStatusBadge = true,
 	size = "compact",
@@ -323,11 +327,12 @@ const BookCard = ({
 					</StatusBadge>
 				) : null}
 				<BookCoverImage
+					fetchPriority={coverFetchPriority}
 					$isLoaded={isCoverLoaded}
 					src={coverSrc}
 					alt={`Cover of ${title}`}
 					decoding="async"
-					loading="lazy"
+					loading={coverLoading}
 					onLoad={() => setLoadedCoverSrc(coverSrc)}
 				/>
 

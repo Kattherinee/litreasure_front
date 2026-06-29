@@ -229,7 +229,8 @@ const WeekCoverImage = ({ alt, src }: { alt: string; src: string }) => {
 				src={src}
 				alt={alt}
 				decoding="async"
-				loading="lazy"
+				fetchPriority="high"
+				loading="eager"
 				onLoad={() => setIsLoaded(true)}
 			/>
 		</BookCoverWrap>

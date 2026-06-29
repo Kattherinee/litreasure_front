@@ -21,8 +21,9 @@ export const SeriesSliderCard = ({ seriesItem }: IProps) => {
 						key={index}
 						$index={index}
 						alt=""
+						fetchPriority={index === 0 ? "high" : "auto"}
 						decoding="async"
-						loading="lazy"
+						loading={index === 0 ? "eager" : "lazy"}
 						src={seriesItem.coverUrl ?? "/images/book-placeholder.svg"}
 					/>
 				))}

@@ -38,7 +38,7 @@ const RECOMMENDATION_RECENT_SEARCHES_KEY =
 const RECENT_SEARCHES_LIMIT = 6;
 const ALL_PREVIEW_LIMIT = 15;
 const TAB_SEARCH_LIMIT = 15;
-const RECOMMENDATION_LIMIT = 10;
+const RECOMMENDATION_LIMIT = 20;
 
 const isSearchTab = (value: string): value is ISearchTabActiveId =>
 	SEARCH_TABS.some((tab) => tab.id === value);

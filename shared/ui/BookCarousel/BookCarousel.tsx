@@ -79,10 +79,12 @@ const BookCarousel = ({
 				ref={setViewportRef}
 			>
 				<CarouselContainer $bleed={bleed} ref={setContainerRef}>
-					{books.map((book) => (
+					{books.map((book, index) => (
 						<CarouselSlide key={book.id}>
 							<BookCard
 								book={book}
+								coverFetchPriority={index < 2 ? "high" : "auto"}
+								coverLoading={index < 2 ? "eager" : "lazy"}
 								isActive={book.id === activeBookId}
 								showStatusBadge={showStatusBadge}
 								size={size}
