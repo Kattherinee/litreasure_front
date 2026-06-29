@@ -85,6 +85,7 @@ export const useRecomendationsForYouBooksQuery = (
 		queryFn: () => getRecomendationsForYouBooks({ params }),
 		queryKey: recomendationsQueryKeys.forYouBooks(params),
 		refetchOnMount: false,
-		staleTime: 2 * 60_000,
+		gcTime: 0,
+		staleTime: 0,
 	});
 };

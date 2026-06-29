@@ -931,7 +931,7 @@ const HeaderToolbar = styled(Toolbar)`
 	}
 `;
 
-const BrandLink = styled.a`
+const BrandLink = styled(Link)`
 	display: flex;
 	align-items: center;
 	flex-shrink: 0;
