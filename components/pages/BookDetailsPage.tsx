@@ -249,6 +249,9 @@ const Section = styled.section`
 	);
 	margin: 0 auto;
 	height: fit-content;
+	@media (max-width: ${theme.rubberSize.tablet}) {
+		margin-bottom: 4vw;
+	}
 `;
 
 const SectionHeader = styled.div`
@@ -257,9 +260,6 @@ const SectionHeader = styled.div`
 	justify-content: space-between;
 	gap: 1.25rem;
 	margin-bottom: 0.75rem;
-	@media (max-width: 47.9375rem) {
-		margin-bottom: 3.75rem;
-	}
 `;
 
 const SectionTitle = styled.h2`
