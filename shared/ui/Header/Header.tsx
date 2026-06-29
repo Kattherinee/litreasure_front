@@ -96,7 +96,9 @@ const Header = () => {
 	const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 	const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-	const [isStandalonePwa, setIsStandalonePwa] = useState(() => isStandaloneMode());
+	const [isStandalonePwa, setIsStandalonePwa] = useState(() =>
+		isStandaloneMode(),
+	);
 	const [showPwaInstallHint, setShowPwaInstallHint] = useState(false);
 	const mobileMenuRef = useRef<HTMLDivElement | null>(null);
 	const session = useAuthStore((state) => state.session);
@@ -250,8 +252,12 @@ const Header = () => {
 			return;
 		}
 
-		const standaloneMediaQuery = window.matchMedia("(display-mode: standalone)");
-		const fullscreenMediaQuery = window.matchMedia("(display-mode: fullscreen)");
+		const standaloneMediaQuery = window.matchMedia(
+			"(display-mode: standalone)",
+		);
+		const fullscreenMediaQuery = window.matchMedia(
+			"(display-mode: fullscreen)",
+		);
 		const minimalUiMediaQuery = window.matchMedia("(display-mode: minimal-ui)");
 
 		const handleEnvironmentChange = () => {
@@ -292,7 +298,10 @@ const Header = () => {
 				handleEnvironmentChange,
 			);
 			window.removeEventListener("pageshow", handleEnvironmentChange);
-			window.removeEventListener(PWA_INSTALL_PROMPT_SEEN_EVENT, handlePromptSeen);
+			window.removeEventListener(
+				PWA_INSTALL_PROMPT_SEEN_EVENT,
+				handlePromptSeen,
+			);
 			window.removeEventListener(
 				PWA_INSTALL_PROMPT_AVAILABLE_EVENT,
 				handlePromptAvailable,
@@ -316,7 +325,7 @@ const Header = () => {
 	return (
 		<>
 			<HeaderBar position="sticky" elevation={0}>
-					<HeaderToolbar>
+				<HeaderToolbar>
 					<BrandLink prefetch={false} href="/" aria-label="Litreasure home">
 						<LogoMark>
 							<LogoIcon />
@@ -326,11 +335,11 @@ const Header = () => {
 
 					<DesktopNav id="main-navigation" aria-label="Main navigation">
 						{visibleNavItems.map((item) => (
-								<NavItem key={item.label}>
+							<NavItem key={item.label}>
 								<NavButton
 									prefetch={false}
 									href={item.href}
-									$isActive={item.match(pathname)}
+									$active={item.match(pathname)}
 								>
 									{item.label}
 								</NavButton>
@@ -344,11 +353,11 @@ const Header = () => {
 															<GenreSkeleton key={index} />
 														))
 													: topGenres.map((genre) => (
-														<GenreDropdownLink
-															key={genre.id}
-															prefetch={false}
-															href={`/genres/${genre.slug}`}
-														>
+															<GenreDropdownLink
+																key={genre.id}
+																prefetch={false}
+																href={`/genres/${genre.slug}`}
+															>
 																{genre.name}
 															</GenreDropdownLink>
 														))}

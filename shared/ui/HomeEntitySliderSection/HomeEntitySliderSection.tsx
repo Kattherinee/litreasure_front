@@ -175,7 +175,6 @@ const HomeEntitySliderSection = ({
 					<ShowMoreButton
 						buttonType="oxygenPill"
 						href={sectionHref}
-						prefetch={false}
 					>
 						See all
 					</ShowMoreButton>
