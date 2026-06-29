@@ -316,8 +316,8 @@ const Header = () => {
 	return (
 		<>
 			<HeaderBar position="sticky" elevation={0}>
-				<HeaderToolbar>
-					<BrandLink href="/" aria-label="Litreasure home">
+					<HeaderToolbar>
+					<BrandLink prefetch={false} href="/" aria-label="Litreasure home">
 						<LogoMark>
 							<LogoIcon />
 						</LogoMark>
@@ -326,8 +326,12 @@ const Header = () => {
 
 					<DesktopNav id="main-navigation" aria-label="Main navigation">
 						{visibleNavItems.map((item) => (
-							<NavItem key={item.label}>
-								<NavButton href={item.href} $active={item.match(pathname)}>
+								<NavItem key={item.label}>
+								<NavButton
+									prefetch={false}
+									href={item.href}
+									$isActive={item.match(pathname)}
+								>
 									{item.label}
 								</NavButton>
 								{"hasGenresDropdown" in item && item.hasGenresDropdown ? (
@@ -340,10 +344,11 @@ const Header = () => {
 															<GenreSkeleton key={index} />
 														))
 													: topGenres.map((genre) => (
-															<GenreDropdownLink
-																key={genre.id}
-																href={`/genres/${genre.slug}`}
-															>
+														<GenreDropdownLink
+															key={genre.id}
+															prefetch={false}
+															href={`/genres/${genre.slug}`}
+														>
 																{genre.name}
 															</GenreDropdownLink>
 														))}
@@ -401,6 +406,7 @@ const Header = () => {
 										item.href ? (
 											<ProfileMenuLink
 												key={item.label}
+												prefetch={false}
 												href={item.href}
 												onClick={closeProfileMenu}
 											>
@@ -416,7 +422,11 @@ const Header = () => {
 											</ProfileMenuItem>
 										),
 									)}
-									<ProfileMenuLink href="/profile" onClick={closeProfileMenu}>
+									<ProfileMenuLink
+										prefetch={false}
+										href="/profile"
+										onClick={closeProfileMenu}
+									>
 										Profile
 										<ProfileMenuHint>Edit</ProfileMenuHint>
 									</ProfileMenuLink>
@@ -467,6 +477,7 @@ const Header = () => {
 					return (
 						<MobileNavLink
 							key={item.label}
+							prefetch={false}
 							href={item.href}
 							$isActive={item.match(pathname)}
 							aria-current={item.match(pathname) ? "page" : undefined}
@@ -505,30 +516,51 @@ const Header = () => {
 							) : null}
 							{user ? (
 								<>
-									<MobileMenuLink href="/genres" onClick={closeMobileMenu}>
+									<MobileMenuLink
+										prefetch={false}
+										href="/genres"
+										onClick={closeMobileMenu}
+									>
 										<CategoryRoundedIcon aria-hidden="true" />
 										<span>Genres</span>
 									</MobileMenuLink>
-									<MobileMenuLink href="/authors" onClick={closeMobileMenu}>
+									<MobileMenuLink
+										prefetch={false}
+										href="/authors"
+										onClick={closeMobileMenu}
+									>
 										<PeopleRoundedIcon aria-hidden="true" />
 										<span>Authors</span>
 									</MobileMenuLink>
-									<MobileMenuLink href="/collections" onClick={closeMobileMenu}>
+									<MobileMenuLink
+										prefetch={false}
+										href="/collections"
+										onClick={closeMobileMenu}
+									>
 										<CollectionsBookmarkRoundedIcon aria-hidden="true" />
 										<span>Collections</span>
 									</MobileMenuLink>
-									<MobileMenuLink href="/treasures" onClick={closeMobileMenu}>
+									<MobileMenuLink
+										prefetch={false}
+										href="/treasures"
+										onClick={closeMobileMenu}
+									>
 										<MobileTreasuresIcon aria-hidden="true" />
 										<span>My Treasures</span>
 									</MobileMenuLink>
 									<MobileMenuLink
+										prefetch={false}
 										href="/book-challenge"
 										onClick={closeMobileMenu}
 									>
 										<ConfirmationNumberRoundedIcon aria-hidden="true" />
 										<span>Book Challenge</span>
 									</MobileMenuLink>
-									<MobileMenuLink href="/profile" onClick={closeMobileMenu}>
+									<MobileMenuLink
+										prefetch={false}
+										href="/profile"
+										onClick={closeMobileMenu}
+									>
 										<PersonRoundedIcon aria-hidden="true" />
 										<span>Profile</span>
 									</MobileMenuLink>
@@ -551,15 +583,27 @@ const Header = () => {
 								</>
 							) : (
 								<>
-									<MobileMenuLink href="/genres" onClick={closeMobileMenu}>
+									<MobileMenuLink
+										prefetch={false}
+										href="/genres"
+										onClick={closeMobileMenu}
+									>
 										<CategoryRoundedIcon aria-hidden="true" />
 										<span>Genres</span>
 									</MobileMenuLink>
-									<MobileMenuLink href="/authors" onClick={closeMobileMenu}>
+									<MobileMenuLink
+										prefetch={false}
+										href="/authors"
+										onClick={closeMobileMenu}
+									>
 										<PeopleRoundedIcon aria-hidden="true" />
 										<span>Authors</span>
 									</MobileMenuLink>
-									<MobileMenuLink href="/collections" onClick={closeMobileMenu}>
+									<MobileMenuLink
+										prefetch={false}
+										href="/collections"
+										onClick={closeMobileMenu}
+									>
 										<CollectionsBookmarkRoundedIcon aria-hidden="true" />
 										<span>Collections</span>
 									</MobileMenuLink>

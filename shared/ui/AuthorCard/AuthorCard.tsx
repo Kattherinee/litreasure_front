@@ -7,7 +7,11 @@ import { ResultSeries } from "../BookSearch/SearchResultCard.styles";
 
 const AuthorCard = ({ author }: { author: IAuthorPreview }) => {
 	return (
-		<AuthorCardContainer key={author.id} href={`/authors/${author.id}`}>
+		<AuthorCardContainer
+			key={author.id}
+			prefetch={false}
+			href={`/authors/${author.id}`}
+		>
 			<AuthorAvatar name={author.name} photoUrl={author.photoUrl} />
 			<AuthorMeta>
 				<AuthorName>{author.name}</AuthorName>

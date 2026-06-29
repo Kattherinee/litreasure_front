@@ -39,9 +39,10 @@ const GenrePill = ({
 			$paddingInline={paddingInline}
 			$borderColor={borderColor}
 			$color={color}
-			$backgroundColor={backgroundColor}
-			{...props}
-		>
+		$backgroundColor={backgroundColor}
+		prefetch={false}
+		{...props}
+	>
 			{children}
 		</PillLink>
 	);

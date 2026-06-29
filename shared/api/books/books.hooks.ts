@@ -43,6 +43,10 @@ export const useBookCardsQuery = (
 		enabled: options?.enabled,
 		queryFn: () => getBookCards({ params }),
 		queryKey: booksQueryKeys.cards(params, viewerKey),
+		gcTime:
+			params.genre || params.genreIds?.length ? 7 * 24 * 60 * 60_000 : undefined,
+		staleTime:
+			params.genre || params.genreIds?.length ? 7 * 24 * 60 * 60_000 : undefined,
 	});
 };
 

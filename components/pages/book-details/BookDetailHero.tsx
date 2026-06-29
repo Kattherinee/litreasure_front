@@ -797,6 +797,8 @@ const TitleEditButton = styled.button`
 	color: ${theme.colors.orangeLight};
 	cursor: pointer;
 	padding: 0;
+	-webkit-tap-highlight-color: transparent;
+	touch-action: manipulation;
 
 	& svg {
 		width: 1.2rem;
@@ -946,6 +948,8 @@ const PaperNoteToggleAction = styled.button`
 	background: ${theme.colors.surface};
 	color: ${theme.colors.darkerOrangeLight};
 	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	touch-action: manipulation;
 	transition:
 		background 180ms ease,
 		color 180ms ease,
@@ -1031,6 +1035,8 @@ const LibraryButtonBase = styled.button<{ $isTracked: boolean }>`
 	color: ${({ $isTracked }) =>
 		$isTracked ? theme.colors.darkerOrangeLight : theme.colors.invertedText};
 	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	touch-action: manipulation;
 	font-family: ${theme.fonts.serif};
 	font-size: 1.1rem;
 	font-weight: 700;
@@ -1135,6 +1141,8 @@ const StatusMenuItem = styled.button<{ $isActive: boolean }>`
 	color: ${({ $isActive }) =>
 		$isActive ? theme.colors.orangeDark : theme.colors.foreground} !important;
 	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	touch-action: manipulation;
 	font: inherit;
 	font-size: 0.95rem;
 	font-weight: ${({ $isActive }) => ($isActive ? 700 : 500)};
@@ -1204,6 +1212,8 @@ const MoreMenuItem = styled.button`
 	padding: 0.65rem 0.75rem;
 	color: ${theme.colors.foreground};
 	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	touch-action: manipulation;
 	font: inherit;
 	font-size: 0.95rem;
 	font-weight: 500;
@@ -1250,6 +1260,8 @@ const RoundAction = styled.button`
 	background: ${theme.colors.surface};
 	color: ${theme.colors.darkerOrangeLight};
 	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	touch-action: manipulation;
 	transition:
 		background 180ms ease,
 		color 180ms ease,

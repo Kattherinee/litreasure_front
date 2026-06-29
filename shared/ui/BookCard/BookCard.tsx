@@ -409,6 +409,7 @@ const BookCard = ({
 				{resolvedAuthorId ? (
 					<BookAuthorLink
 						$size={size}
+						prefetch={false}
 						href={`/authors/${resolvedAuthorId}`}
 						onClick={stopNestedNavigation}
 						onKeyDown={stopNestedNavigation}

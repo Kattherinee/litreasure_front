@@ -91,7 +91,7 @@ const BookCarousel = ({
 					))}
 					{endSlideHref ? (
 						<CarouselSlide>
-							<EndSlideLink href={endSlideHref}>
+							<EndSlideLink prefetch={false} href={endSlideHref}>
 								<EndSlideInner>
 									<EndSlideEyebrow>More books</EndSlideEyebrow>
 									<EndSlideTitle>{endSlideLabel}</EndSlideTitle>

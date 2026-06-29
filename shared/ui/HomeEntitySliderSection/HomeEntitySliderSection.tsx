@@ -172,7 +172,11 @@ const HomeEntitySliderSection = ({
 			<SectionHeader>
 				<SectionHeading>
 					<SectionTitle>{title}</SectionTitle>
-					<ShowMoreButton buttonType="oxygenPill" href={sectionHref}>
+					<ShowMoreButton
+						buttonType="oxygenPill"
+						href={sectionHref}
+						prefetch={false}
+					>
 						See all
 					</ShowMoreButton>
 				</SectionHeading>
@@ -253,7 +257,10 @@ const AuthorCarousel = ({
 			<CarouselContainer ref={setContainerRef}>
 				{authors.map((author) => (
 					<CarouselSlide key={author.id}>
-						<AuthorTreasureCard href={`/authors/${author.id}`}>
+						<AuthorTreasureCard
+							prefetch={false}
+							href={`/authors/${author.id}`}
+						>
 							<AuthorAvatar
 								name={author.name}
 								photoUrl={author.photoUrl}
@@ -269,7 +276,7 @@ const AuthorCarousel = ({
 					</CarouselSlide>
 				))}
 				<CarouselSlide>
-					<EndSlideLink href={endSlideHref}>
+					<EndSlideLink prefetch={false} href={endSlideHref}>
 						<EndSlideInner>
 							<EndSlideEyebrow>More authors</EndSlideEyebrow>
 							<EndSlideTitle>See all</EndSlideTitle>
@@ -311,7 +318,10 @@ const CollectionCarousel = ({
 			<CarouselContainer ref={setContainerRef}>
 				{collections.map((collection) => (
 					<CarouselSlide key={collection.id}>
-						<CollectionTreasureCard href={`/collections/${collection.id}`}>
+						<CollectionTreasureCard
+							prefetch={false}
+							href={`/collections/${collection.id}`}
+						>
 							<CollectionCover
 								$coverUrl={collection.coverUrl}
 								aria-hidden="true"
@@ -328,7 +338,7 @@ const CollectionCarousel = ({
 					</CarouselSlide>
 				))}
 				<CarouselSlide>
-					<EndSlideLink href={endSlideHref}>
+					<EndSlideLink prefetch={false} href={endSlideHref}>
 						<EndSlideInner>
 							<EndSlideEyebrow>More collections</EndSlideEyebrow>
 							<EndSlideTitle>See all</EndSlideTitle>
@@ -374,7 +384,7 @@ const SeriesCarousel = ({
 					</CarouselSlide>
 				))}
 				<CarouselSlide>
-					<EndSlideLink href={endSlideHref}>
+					<EndSlideLink prefetch={false} href={endSlideHref}>
 						<EndSlideInner>
 							<EndSlideEyebrow>More series</EndSlideEyebrow>
 							<EndSlideTitle>See all</EndSlideTitle>

@@ -110,6 +110,7 @@ export const BookResultCard = ({
 			<ResultMain $isRecommendation={isRecommendation}>
 				<ResultCoverLink
 					$isRecommendation={isRecommendation}
+					prefetch={false}
 					href={`/books/${book.id}`}
 					onClick={handleOpenResult}
 				>
@@ -120,7 +121,11 @@ export const BookResultCard = ({
 					/>
 				</ResultCoverLink>
 				<ResultMeta>
-					<ResultLink href={`/books/${book.id}`} onClick={handleOpenResult}>
+					<ResultLink
+						prefetch={false}
+						href={`/books/${book.id}`}
+						onClick={handleOpenResult}
+					>
 						{seriesLine ? (
 							<ResultSeries>
 								<HighlightedText query={query} text={seriesLine} />
@@ -134,6 +139,7 @@ export const BookResultCard = ({
 						<>
 							<ResultRecommendationAuthor>
 								<StyledResultLink
+									prefetch={false}
 									href={`/authors/${book.authorId}`}
 									onClick={handleOpenResult}
 								>
@@ -155,6 +161,7 @@ export const BookResultCard = ({
 							) : null}
 							<ResultAuthor>
 								<StyledResultLink
+									prefetch={false}
 									href={`/authors/${book.authorId}`}
 									onClick={handleOpenResult}
 								>

@@ -11,7 +11,10 @@ interface IProps {
 
 export const SeriesSliderCard = ({ seriesItem }: IProps) => {
 	return (
-		<SeriesTreasureCard href={`/series/${seriesItem.id}`}>
+		<SeriesTreasureCard
+			prefetch={false}
+			href={`/series/${seriesItem.id}`}
+		>
 			<SeriesCoverStack aria-hidden="true">
 				{Array.from({ length: 3 }, (_, index) => (
 					<SeriesCover
