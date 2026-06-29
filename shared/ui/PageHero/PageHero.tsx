@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import styled from "styled-components";
 
 import { theme } from "@/shared/theme";
@@ -8,6 +9,8 @@ import { Button } from "@/shared/ui/Button";
 interface IPageHeroProps {
 	actionLabel?: string;
 	copyWidth?: string;
+	children?: ReactNode;
+	titleSuffix?: ReactNode;
 	text: string;
 	title: string;
 	onAction?: () => void;
@@ -15,16 +18,22 @@ interface IPageHeroProps {
 
 export const PageHero = ({
 	actionLabel,
+	children,
 	copyWidth,
 	text,
 	title,
+	titleSuffix,
 	onAction,
 }: IPageHeroProps) => (
 	<Hero>
 		<HeroInner $copyWidth={copyWidth}>
 			<HeroCopy $copyWidth={copyWidth}>
-				<PageTitle>{title}</PageTitle>
+				<PageTitleRow>
+					<PageTitle>{title}</PageTitle>
+					{titleSuffix ? <TitleSuffix>{titleSuffix}</TitleSuffix> : null}
+				</PageTitleRow>
 				<HeroText>{text}</HeroText>
+				{children ? <HeroActions>{children}</HeroActions> : null}
 			</HeroCopy>
 			{actionLabel && onAction ? (
 				<Button buttonType="containedInverted" type="button" onClick={onAction}>
@@ -72,11 +81,26 @@ const PageTitle = styled.h1`
 	font-family: ${theme.fonts.serif};
 	font-size: 2.5vw;
 	font-weight: 600;
-	line-height: 0.98;
+	line-height: 1.8;
 
 	@media (max-width: 48rem) {
 		font-size: 2.5rem;
 	}
+`;
+
+const PageTitleRow = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	width: 100%;
+	flex-wrap: wrap;
+`;
+
+const TitleSuffix = styled.div`
+	display: flex;
+	flex: 1 1 auto;
+	align-items: center;
+	justify-content: flex-end;
 `;
 
 const HeroText = styled.p`
@@ -85,4 +109,11 @@ const HeroText = styled.p`
 	color: ${theme.colors.softForeground};
 	font-size: 1.05rem;
 	line-height: 1.6;
+`;
+
+const HeroActions = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.75rem;
 `;

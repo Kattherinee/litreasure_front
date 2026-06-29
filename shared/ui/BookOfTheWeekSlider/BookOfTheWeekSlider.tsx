@@ -18,11 +18,18 @@ const SCROLL_EDGE_THRESHOLD = 0.002;
 
 interface IBookOfTheWeekSliderProps {
 	lazy?: boolean;
+	lazyRootMargin?: string;
 }
 
-const BookOfTheWeekSlider = ({ lazy = false }: IBookOfTheWeekSliderProps) => {
+const BookOfTheWeekSlider = ({
+	lazy = false,
+	lazyRootMargin = "0px",
+}: IBookOfTheWeekSliderProps) => {
 	const router = useRouter();
-	const { containerRef, isTriggered } = useLazyLoadTrigger(lazy);
+	const { containerRef, isTriggered } = useLazyLoadTrigger(
+		lazy,
+		lazyRootMargin,
+	);
 	const {
 		data: weekBooks = [],
 		error,

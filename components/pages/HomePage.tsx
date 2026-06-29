@@ -13,6 +13,9 @@ import HomeEntitySliderSection from "@/shared/ui/HomeEntitySliderSection/HomeEnt
 
 const normalize = (value?: string) => value?.toLowerCase().trim() ?? "";
 
+const ABOVE_FOLD_LAZY_ROOT_MARGIN = "-180px 0px 0px 0px";
+const BELOW_FOLD_LAZY_ROOT_MARGIN = "-420px 0px 0px 0px";
+
 const isForYouSection = (section: IHomeSection) => {
 	const key = normalize(section.key);
 
@@ -141,11 +144,15 @@ const HomePage = () => {
 					) : (
 						<BookSliderSection title="New releases" sort="newest" limit={20} />
 					)}
-					<BookOfTheWeekSlider />
+					<BookOfTheWeekSlider
+						lazy
+						lazyRootMargin={ABOVE_FOLD_LAZY_ROOT_MARGIN}
+					/>
 					{popularBookSection ? (
 						<BookSliderSection
 							key={popularBookSection.key}
 							lazy
+							lazyRootMargin={ABOVE_FOLD_LAZY_ROOT_MARGIN}
 							title="Popular"
 							{...popularBookSection.query}
 						/>
@@ -154,6 +161,7 @@ const HomePage = () => {
 						<BookSliderSection
 							key={firstGenreBookSection.key}
 							lazy
+							lazyRootMargin={ABOVE_FOLD_LAZY_ROOT_MARGIN}
 							title={firstGenreBookSection.title}
 							{...firstGenreBookSection.query}
 						/>
@@ -163,6 +171,7 @@ const HomePage = () => {
 							key={section.key}
 							entity="collections"
 							lazy
+							lazyRootMargin={BELOW_FOLD_LAZY_ROOT_MARGIN}
 							query={section.query}
 							title={section.title}
 						/>
@@ -171,6 +180,7 @@ const HomePage = () => {
 						<BookSliderSection
 							key={secondGenreBookSection.key}
 							lazy
+							lazyRootMargin={BELOW_FOLD_LAZY_ROOT_MARGIN}
 							title={secondGenreBookSection.title}
 							{...secondGenreBookSection.query}
 						/>
@@ -180,6 +190,7 @@ const HomePage = () => {
 							key={section.key}
 							entity="series"
 							lazy
+							lazyRootMargin={BELOW_FOLD_LAZY_ROOT_MARGIN}
 							query={section.query}
 							title={section.title}
 						/>
@@ -188,6 +199,7 @@ const HomePage = () => {
 						<BookSliderSection
 							key={thirdGenreBookSection.key}
 							lazy
+							lazyRootMargin={BELOW_FOLD_LAZY_ROOT_MARGIN}
 							title={thirdGenreBookSection.title}
 							{...thirdGenreBookSection.query}
 						/>
@@ -196,6 +208,7 @@ const HomePage = () => {
 						<BookSliderSection
 							key={fourthGenreBookSection.key}
 							lazy
+							lazyRootMargin={BELOW_FOLD_LAZY_ROOT_MARGIN}
 							title={fourthGenreBookSection.title}
 							{...fourthGenreBookSection.query}
 						/>
@@ -205,6 +218,7 @@ const HomePage = () => {
 							key={section.key}
 							entity="authors"
 							lazy
+							lazyRootMargin={BELOW_FOLD_LAZY_ROOT_MARGIN}
 							query={section.query}
 							title={section.title}
 						/>
@@ -213,6 +227,7 @@ const HomePage = () => {
 						<BookSliderSection
 							key={section.key}
 							lazy
+							lazyRootMargin={BELOW_FOLD_LAZY_ROOT_MARGIN}
 							title={section.title}
 							{...section.query}
 						/>
@@ -221,6 +236,7 @@ const HomePage = () => {
 						<BookSliderSection
 							key={section.key}
 							lazy
+							lazyRootMargin={BELOW_FOLD_LAZY_ROOT_MARGIN}
 							title={section.title}
 							{...section.query}
 						/>

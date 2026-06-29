@@ -34,6 +34,8 @@ export const useRecomendationsByPromptQuery = (
 		enabled: options?.enabled,
 		queryFn: () => getRecomendationsByPrompt({ params }),
 		queryKey: recomendationsQueryKeys.byPrompt(params),
+		refetchOnMount: false,
+		staleTime: 5 * 60_000,
 	});
 };
 
@@ -44,6 +46,8 @@ export const useRecomendationsWeekBooksQuery = (options?: {
 		enabled: options?.enabled,
 		queryFn: getRecomendationsWeekBooks,
 		queryKey: recomendationsQueryKeys.weekBooks(),
+		refetchOnMount: false,
+		staleTime: 10 * 60_000,
 	});
 };
 
@@ -55,6 +59,8 @@ export const useRecomendationsByBookQuery = (
 		enabled: options?.enabled,
 		queryFn: () => getRecomendationsByBook({ params }),
 		queryKey: recomendationsQueryKeys.byBook(params),
+		refetchOnMount: false,
+		staleTime: 5 * 60_000,
 	});
 };
 
@@ -65,6 +71,8 @@ export const useRecomendationsHomeSectionsQuery = (options?: {
 		enabled: options?.enabled,
 		queryFn: getRecomendationsHomeSections,
 		queryKey: recomendationsQueryKeys.homeSections(),
+		refetchOnMount: false,
+		staleTime: 10 * 60_000,
 	});
 };
 
@@ -76,5 +84,7 @@ export const useRecomendationsForYouBooksQuery = (
 		enabled: options?.enabled,
 		queryFn: () => getRecomendationsForYouBooks({ params }),
 		queryKey: recomendationsQueryKeys.forYouBooks(params),
+		refetchOnMount: false,
+		staleTime: 2 * 60_000,
 	});
 };

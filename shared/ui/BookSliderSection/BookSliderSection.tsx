@@ -25,6 +25,7 @@ interface IBookSliderSectionProps {
 	genre?: string;
 	genreIds?: string[];
 	lazy?: boolean;
+	lazyRootMargin?: string;
 	limit?: number;
 	page?: number;
 	source?: "books" | "for-you";
@@ -59,6 +60,7 @@ const BookSliderSection = ({
 	genre,
 	genreIds,
 	lazy = false,
+	lazyRootMargin = "0px",
 	limit,
 	page,
 	source = "books",
@@ -66,7 +68,10 @@ const BookSliderSection = ({
 }: IBookSliderSectionProps) => {
 	const [carouselControls, setCarouselControls] =
 		useState<ICarouselControls | null>(null);
-	const { containerRef, isTriggered } = useLazyLoadTrigger(lazy);
+	const { containerRef, isTriggered } = useLazyLoadTrigger(
+		lazy,
+		lazyRootMargin,
+	);
 	const queryParams = { genre, genreIds, limit, page, sort };
 	const {
 		data: booksResponse,

@@ -507,6 +507,7 @@ const BookCover = styled.div<{
 	z-index: 2;
 	flex: 0 0 auto;
 	overflow: hidden;
+	border-radius: 0.9rem;
 	width: ${({ $size }) => getFallbackCoverWidthBySize($size)};
 	height: ${({ $size }) =>
 		$size === "tiny"
@@ -514,8 +515,6 @@ const BookCover = styled.div<{
 			: $size === "compact"
 				? "11.45rem"
 				: "15.25rem"};
-
-	border-radius: 0.9rem;
 	transition:
 		border-color 220ms ease,
 		box-shadow 220ms ease,
@@ -541,9 +540,9 @@ const BookCoverImage = styled.img<{ $isLoaded: boolean }>`
 	display: block;
 	width: 100%;
 	height: 100%;
-	object-fit: contain;
+	object-fit: cover;
 	object-position: center;
-	border-radius: 0.9rem;
+	border-radius: inherit;
 	opacity: ${({ $isLoaded }) => ($isLoaded ? 1 : 0)};
 	transition: opacity 220ms ease;
 `;

@@ -45,6 +45,7 @@ import { SeriesSliderCard } from "./SeriesSliderCard";
 interface IHomeEntitySliderSectionProps {
 	entity: "authors" | "collections" | "series";
 	lazy?: boolean;
+	lazyRootMargin?: string;
 	query: IHomeSectionQuery;
 	title: string;
 }
@@ -52,10 +53,14 @@ interface IHomeEntitySliderSectionProps {
 const HomeEntitySliderSection = ({
 	entity,
 	lazy = false,
+	lazyRootMargin = "0px",
 	query,
 	title,
 }: IHomeEntitySliderSectionProps) => {
-	const { containerRef, isTriggered } = useLazyLoadTrigger(lazy);
+	const { containerRef, isTriggered } = useLazyLoadTrigger(
+		lazy,
+		lazyRootMargin,
+	);
 	const authorParams: IAuthorsListParams = useMemo(
 		() => ({
 			genres: query.genres ?? query.genreIds,

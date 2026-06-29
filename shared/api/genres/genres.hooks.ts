@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useAuthStore } from "@/shared/store/auth-store";
+import { userQueryKeys } from "../users";
 
 import {
 	createGenre,
@@ -18,7 +19,12 @@ import type {
 } from "./genres.types";
 
 export const useGenresQuery = () =>
-	useQuery({ queryFn: getGenres, queryKey: ["genres"] });
+	useQuery({
+		queryFn: getGenres,
+		queryKey: ["genres"],
+		refetchOnMount: false,
+		staleTime: 10 * 60_000,
+	});
 
 interface IUseGenresByCategoryQueryParams {
 	includeCounts?: boolean;
@@ -42,6 +48,8 @@ export const useGenresByCategoryQuery = ({
 			selected.join(","),
 			sessionKey,
 		],
+		refetchOnMount: false,
+		staleTime: 10 * 60_000,
 	});
 };
 
@@ -55,6 +63,8 @@ export const useSaveGenreMutation = () => {
 		mutationFn: (genreId: string) => saveGenre(userId, genreId),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["genres"] });
+			queryClient.invalidateQueries({ queryKey: userQueryKeys.genres(userId) });
+			queryClient.invalidateQueries({ queryKey: ["genres", "byCategory"] });
 		},
 	});
 };
@@ -85,12 +95,17 @@ export const useUpdateGenreMutation = () => {
 
 export const useDeleteGenreMutation = () => {
 	const queryClient = useQueryClient();
+	const userId = useAuthStore(
+		(state) => state.session?.user.id ?? state.session?.user.email ?? "guest",
+	);
 
 	return useMutation({
 		mutationFn: (id: string) => deleteGenre(id),
 		onSuccess: (_data, id) => {
 			queryClient.invalidateQueries({ queryKey: ["genres"] });
 			queryClient.invalidateQueries({ queryKey: ["genres", id] });
+			queryClient.invalidateQueries({ queryKey: userQueryKeys.genres(userId) });
+			queryClient.invalidateQueries({ queryKey: ["genres", "byCategory"] });
 		},
 	});
 };
