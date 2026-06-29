@@ -4,7 +4,6 @@ import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import type { SyntheticEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import styled from "styled-components";
@@ -24,11 +23,6 @@ const pageSize = 18;
 const previewSize = 7;
 
 const combinedStatus = "owned_and_given_away" as const;
-const noteBubbleEstimate = {
-	height: 144,
-	width: 240,
-};
-const noteBubbleGap = 12;
 
 type IPaperBooksFilter = IPaperBookStatus | typeof combinedStatus;
 
@@ -39,20 +33,8 @@ const statusTabs: Array<{ id: IPaperBooksFilter; label: string }> = [
 	{ id: "given_away", label: "Gifted away" },
 ];
 
-type INotePlacementDirection =
-	| "up-right"
-	| "up-left"
-	| "down-right"
-	| "down-left";
-
 type INotePopoverMode = "preview" | "expanded";
 type INoteBadgeMode = "icon" | INotePopoverMode;
-
-interface INotePlacement {
-	direction: INotePlacementDirection;
-	left: number;
-	top: number;
-}
 
 export interface IPaperBooksSectionProps {
 	variant?: "preview" | "page";
@@ -295,23 +277,13 @@ const PaperBookCard = ({
 	showStatusChip: boolean;
 }) => {
 	const hasNote = Boolean(item.note?.trim());
-	const [coverWidth, setCoverWidth] = useState<number | null>(null);
 	const [isCoverLoaded, setIsCoverLoaded] = useState(false);
 	const cardRef = useRef<HTMLDivElement | null>(null);
 	const coverSrc = item.book.coverUrl?.trim()
 		? item.book.coverUrl
 		: "/images/book-placeholder.svg";
 
-	const handleCoverLoad = (event: SyntheticEvent<HTMLImageElement>) => {
-		const image = event.currentTarget;
-
-		if (!image.naturalWidth || !image.naturalHeight) {
-			return;
-		}
-
-		setCoverWidth(
-			(image.naturalWidth / image.naturalHeight) * image.clientHeight,
-		);
+	const handleCoverLoad = () => {
 		setIsCoverLoaded(true);
 	};
 
@@ -346,10 +318,10 @@ const PaperBookCard = ({
 				onOpen();
 			}}
 		>
-			<CardTop $coverWidth={coverWidth}>
+			<CardTop>
 				<CardDate>{formatPaperBookDate(item.updatedAt)}</CardDate>
 			</CardTop>
-			<CoverFrame $coverWidth={coverWidth}>
+			<CoverFrame>
 				<CoverShell>
 					{isCoverLoaded ? null : <CoverPlaceholder aria-hidden="true" />}
 					<Cover
@@ -391,9 +363,9 @@ const PaperBookCard = ({
 							</NoteBadgeInner>
 						</NoteBadge>
 					) : null}
-				</CoverShell>
+					</CoverShell>
 			</CoverFrame>
-			<Meta $coverWidth={coverWidth}>
+			<Meta>
 				<CardTitle>{item.book.title}</CardTitle>
 				<CardAuthor>{item.book.author}</CardAuthor>
 				{showStatusChip ? (
@@ -418,96 +390,6 @@ const formatPaperBookDate = (value: string) =>
 		month: "short",
 		year: "numeric",
 	}).format(new Date(value));
-
-const clamp = (value: number, min: number, max: number) =>
-	Math.min(Math.max(value, min), max);
-
-const getNotePlacement = (anchorRect: DOMRect): INotePlacement => {
-	const viewportWidth = window.innerWidth;
-	const viewportHeight = window.innerHeight;
-	const margin = 8;
-	const bubbleWidth = Math.min(
-		noteBubbleEstimate.width,
-		Math.max(0, viewportWidth - margin * 2),
-	);
-	const bubbleHeight = Math.min(
-		noteBubbleEstimate.height,
-		Math.max(0, viewportHeight - margin * 2),
-	);
-	const roomRight = viewportWidth - anchorRect.right;
-	const roomLeft = anchorRect.left;
-	const roomTop = anchorRect.top;
-	const roomBottom = viewportHeight - anchorRect.bottom;
-
-	const chooseDirection = (): INotePlacementDirection => {
-		if (
-			roomRight >= bubbleWidth + noteBubbleGap &&
-			roomTop >= bubbleHeight + noteBubbleGap
-		) {
-			return "up-right";
-		}
-
-		if (
-			roomLeft >= bubbleWidth + noteBubbleGap &&
-			roomTop >= bubbleHeight + noteBubbleGap
-		) {
-			return "up-left";
-		}
-
-		if (
-			roomRight >= bubbleWidth + noteBubbleGap &&
-			roomBottom >= bubbleHeight + noteBubbleGap
-		) {
-			return "down-right";
-		}
-
-		if (
-			roomLeft >= bubbleWidth + noteBubbleGap &&
-			roomBottom >= bubbleHeight + noteBubbleGap
-		) {
-			return "down-left";
-		}
-
-		if (roomRight >= roomLeft) {
-			return roomTop >= roomBottom ? "up-right" : "down-right";
-		}
-
-		return roomTop >= roomBottom ? "up-left" : "down-left";
-	};
-
-	const direction = chooseDirection();
-
-	const rawPosition = (() => {
-		switch (direction) {
-			case "up-right":
-				return {
-					left: anchorRect.right + noteBubbleGap,
-					top: anchorRect.top - noteBubbleGap - bubbleHeight,
-				};
-			case "up-left":
-				return {
-					left: anchorRect.left - noteBubbleGap - bubbleWidth,
-					top: anchorRect.top - noteBubbleGap - bubbleHeight,
-				};
-			case "down-right":
-				return {
-					left: anchorRect.right + noteBubbleGap,
-					top: anchorRect.bottom + noteBubbleGap,
-				};
-			case "down-left":
-				return {
-					left: anchorRect.left - noteBubbleGap - bubbleWidth,
-					top: anchorRect.bottom + noteBubbleGap,
-				};
-		}
-	})();
-
-	return {
-		direction,
-		left: clamp(rawPosition.left, margin, viewportWidth - bubbleWidth - margin),
-		top: clamp(rawPosition.top, margin, viewportHeight - bubbleHeight - margin),
-	};
-};
 
 const Panel = styled.section<{ $variant: "preview" | "page" }>`
 	display: flex;
@@ -710,11 +592,11 @@ const Card = styled.article`
 	}
 `;
 
-const CardTop = styled.div<{ $coverWidth: number | null }>`
+const CardTop = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: ${({ $coverWidth }) => ($coverWidth ? `${$coverWidth}px` : "7.65rem")};
+	width: fit-content;
 	min-height: 1.25rem;
 	margin-bottom: 0.45rem;
 	padding-inline: 1.8rem;
@@ -728,10 +610,10 @@ const CardDate = styled.span`
 	white-space: nowrap;
 `;
 
-const CoverFrame = styled.div<{ $coverWidth: number | null }>`
+const CoverFrame = styled.div`
 	display: flex;
 	justify-content: center;
-	width: ${({ $coverWidth }) => ($coverWidth ? `${$coverWidth}px` : "7.65rem")};
+	width: fit-content;
 	padding-bottom: 0.65rem;
 `;
 
@@ -754,9 +636,9 @@ const Cover = styled.img`
 	background: rgb(242 239 237 / 0.56);
 `;
 
-const Meta = styled.div<{ $coverWidth: number | null }>`
+const Meta = styled.div`
 	display: grid;
-	width: ${({ $coverWidth }) => ($coverWidth ? `${$coverWidth}px` : "7.65rem")};
+	width: fit-content;
 	min-width: 0;
 	justify-items: center;
 	padding-inline: 0.1rem;
